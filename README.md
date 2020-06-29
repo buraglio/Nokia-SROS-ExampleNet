@@ -1,7 +1,7 @@
 # Nokia-SROS-ExampleNet
 
 ### Nokia PCE Segment Routing testing
-Included here are the Test configurations for PCE testing with Nokia SROS as well as the Topology and Eve-NG Lab XML File. This repo consists of a 4 Router Lab utilizing Nokia SROS 14 for testingo. 
+Included here are the Test configurations for MPLS testing with Nokia SROS as well as the Topology and Eve-NG Lab XML File. This repo consists of a 4 Router Lab utilizing Nokia SROS 14 for testingo. 
 
 ### Files and such
 
