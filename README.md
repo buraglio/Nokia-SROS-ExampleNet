@@ -13,4 +13,4 @@ Included here are the Test configurations for PCE testing with Nokia SROS as wel
 ### Diagrams and physical layout
 
 The Physical layout of this test environment is detailed in this diagram. This was built on EVE-NG bare metal server with significant horsepower. 
-![Physical lab Topology](https://github.com/buraglio/Nokia-SR-PCE/blob/master/netlab-virtlab-physical-pub.png?raw=true "Physical Lab Topology")
+![Physical lab Topology](https://github.com/buraglio/Nokia-SROS-ExampleNet/blob/master/Network%20Diagram.png?raw=true "Physical Lab Topology")
