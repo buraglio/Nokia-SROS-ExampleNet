@@ -4,7 +4,7 @@ configure
 echo "System Configuration"
 #--------------------------------------------------
     system
-        name "vsr4"
+        name "vsr6"
         dns
         exit
         rollback
@@ -166,6 +166,7 @@ echo "Port Configuration"
     exit
     port 1/1/5
         ethernet
+            mode hybrid
             encap-type dot1q
             lldp
                 dest-mac nearest-bridge
@@ -211,6 +212,7 @@ echo "Port Configuration"
     exit
     port 1/1/8
         ethernet
+            mode hybrid
             encap-type dot1q
             lldp
                 dest-mac nearest-bridge
@@ -264,56 +266,40 @@ echo "Router (Network Side) Configuration"
 #--------------------------------------------------
     router Base
         interface "system"
-            address 100.64.0.4/32
+            address 100.64.0.6/32
             ipv6
-                address 2001:db8:293:ffff::4/128
+                address 2001:db8:293:ffff::6/128
             exit
             no shutdown
         exit
-        interface "vsr4-vsr1"
-            address 10.1.1.9/31
+        interface "vsr6-vsr1"
+            address 10.2.1.22/31
             port 1/1/1:5
             ipv6
-                address 2001:db8:293:f2f::9/127
+                address 2001:db8:293:f3f::16/127
             exit
             no shutdown
         exit
-        interface "vsr4-vsr2"
-            address 10.2.1.5/31
-            port 1/1/3:5
-            ipv6
-                address 2001:db8:293:f3f::5/127
-            exit
-            no shutdown
-        exit
-        interface "vsr4-vsr3"
-            address 10.1.1.7/31
+        interface "vsr6-vsr4"
+            address 10.1.1.20/31
             port 1/1/2:5
             ipv6
-                address 2001:db8:293:f2f::7/127
-            exit
-            no shutdown
-        exit
-        interface "vsr4-vsr6"
-            address 10.1.1.21/31
-            port 1/1/4:5
-            ipv6
-                address 2001:db8:293:f2f::15/127
+                address 2001:db8:293:f2f::14/127
             exit
             no shutdown
         exit
         autonomous-system 65505
         ecmp 2
-        router-id 100.64.0.4
+        router-id 100.64.0.6
 #--------------------------------------------------
 echo "Aggregate Configuration"
 #--------------------------------------------------
-        aggregate 100.124.0.0/16 black-hole
+        aggregate 100.126.0.0/16
 #--------------------------------------------------
 echo "ISIS Configuration"
 #--------------------------------------------------
         isis 0
-            router-id 100.64.0.4
+            router-id 100.64.0.6
             area-id 49.0001
             traffic-engineering
             advertise-router-capability area
@@ -326,7 +312,7 @@ echo "ISIS Configuration"
             interface "system"
                 no shutdown
             exit
-            interface "vsr4-vsr1"
+            interface "vsr6-vsr4"
                 interface-type point-to-point
                 level 1
                     metric 25000
@@ -336,24 +322,7 @@ echo "ISIS Configuration"
                 exit
                 no shutdown
             exit
-            interface "vsr4-vsr2"
-                interface-type point-to-point
-                level 1
-                    metric 25000
-                exit
-                no shutdown
-            exit
-            interface "vsr4-vsr3"
-                interface-type point-to-point
-                level 1
-                    metric 25000
-                exit
-                level 2
-                    metric 25000
-                exit
-                no shutdown
-            exit
-            interface "vsr4-vsr6"
+            interface "vsr6-vsr1"
                 interface-type point-to-point
                 level 1
                     metric 25000
@@ -372,13 +341,10 @@ echo "MPLS Configuration"
             interface "system"
                 no shutdown
             exit
-            interface "vsr4-vsr1"
+            interface "vsr6-vsr4"
                 no shutdown
             exit
-            interface "vsr4-vsr2"
-                no shutdown
-            exit
-            interface "vsr4-vsr3"
+            interface "vsr6-vsr1"
                 no shutdown
             exit
         exit
@@ -390,13 +356,10 @@ echo "RSVP Configuration"
             interface "system"
                 no shutdown
             exit
-            interface "vsr4-vsr1"
+            interface "vsr6-vsr4"
                 no shutdown
             exit
-            interface "vsr4-vsr2"
-                no shutdown
-            exit
-            interface "vsr4-vsr3"
+            interface "vsr6-vsr1"
                 no shutdown
             exit
             no shutdown
@@ -415,25 +378,13 @@ echo "LDP Configuration"
 #--------------------------------------------------
         ldp
             interface-parameters
-                interface "vsr4-vsr1" dual-stack
+                interface "vsr6-vsr4" dual-stack
                     ipv4
                         no shutdown
                     exit
                     no shutdown
                 exit
-                interface "vsr4-vsr2" dual-stack
-                    ipv4
-                        no shutdown
-                    exit
-                    no shutdown
-                exit
-                interface "vsr4-vsr3" dual-stack
-                    ipv4
-                        no shutdown
-                    exit
-                    no shutdown
-                exit
-                interface "vsr4-vsr6" dual-stack
+                interface "vsr6-vsr1" dual-stack
                     ipv4
                         no shutdown
                     exit
@@ -453,6 +404,21 @@ echo "Service Configuration"
         customer 1 create
             description "Default customer"
         exit
+        ies 1 customer 1 create
+            interface "vsr6-host6" create
+            exit
+        exit
+        ies 1 customer 1 create
+            interface "vsr6-host6" create
+                address 10.6.6.1/30
+                ipv6
+                    address 2001:db8:293:f6f::2/127
+                exit
+                sap 1/1/5:0 create
+                exit
+            exit
+            no shutdown
+        exit
     exit
 #--------------------------------------------------
 echo "Router (Service Side) Configuration"
@@ -469,15 +435,15 @@ echo "Policy Configuration"
 #--------------------------------------------------
         policy-options
             begin
-            prefix-list "vsr4-exact-v4"
-                prefix 100.124.0.0/16 exact
+            prefix-list "vsr6-exact-v4"
+                prefix 100.126.0.0/16 exact
             exit
             policy-statement "aggregate-routes"
                 entry 10
-                    description "vsr4-aggregate"
+                    description "vsr6-aggregate"
                     from
                         protocol aggregate
-                        prefix-list "vsr4-exact-v4"
+                        prefix-list "vsr6-exact-v4"
                     exit
                     action accept
                         local-preference 10000
@@ -507,16 +473,16 @@ echo "BGP Configuration"
                 export "aggregate-routes" "connected-routes"
                 local-as 65505
                 peer-as 65505
-                local-address 100.64.0.4
+                local-address 100.64.0.6
                 neighbor 100.64.0.1
                 exit
                 neighbor 100.64.0.2
                 exit
                 neighbor 100.64.0.3
                 exit
-                neighbor 100.64.0.5
+                neighbor 100.64.0.4
                 exit
-                neighbor 100.64.0.6
+                neighbor 100.64.0.5
                 exit
             exit
             no shutdown

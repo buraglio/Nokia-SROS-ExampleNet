@@ -294,9 +294,21 @@ echo "Router (Network Side) Configuration"
             exit
             no shutdown
         exit
+        interface "vsr2-vsr5"
+            address 10.1.1.25/31
+            port 1/1/4:5
+            ipv6
+                address 2001:db8:293:f2f::19/127
+            exit
+            no shutdown
+        exit
         autonomous-system 65505
         ecmp 2
         router-id 100.64.0.2
+#--------------------------------------------------
+echo "Aggregate Configuration"
+#--------------------------------------------------
+        aggregate 100.122.0.0/16 black-hole
 #--------------------------------------------------
 echo "ISIS Configuration"
 #--------------------------------------------------
@@ -341,6 +353,16 @@ echo "ISIS Configuration"
                 exit
                 no shutdown
             exit
+            interface "vsr2-vsr5"
+                interface-type point-to-point
+                level 1
+                    metric 25000
+                exit
+                level 2
+                    metric 25000
+                exit
+                no shutdown
+            exit
             no shutdown
         exit
 #--------------------------------------------------
@@ -359,6 +381,9 @@ echo "MPLS Configuration"
             interface "vsr2-vsr4"
                 no shutdown
             exit
+            interface "vsr2-vsr5"
+                no shutdown
+            exit
         exit
 #--------------------------------------------------
 echo "RSVP Configuration"
@@ -375,6 +400,9 @@ echo "RSVP Configuration"
                 no shutdown
             exit
             interface "vsr2-vsr4"
+                no shutdown
+            exit
+            interface "vsr2-vsr5"
                 no shutdown
             exit
             no shutdown
@@ -411,6 +439,12 @@ echo "LDP Configuration"
                     exit
                     no shutdown
                 exit
+                interface "vsr2-vsr5" dual-stack
+                    ipv4
+                        no shutdown
+                    exit
+                    no shutdown
+                exit
             exit
             targeted-session
             exit
@@ -437,11 +471,46 @@ echo "ISIS Configuration"
             no shutdown
         exit
 #--------------------------------------------------
+echo "Policy Configuration"
+#--------------------------------------------------
+        policy-options
+            begin
+            prefix-list "vsr2-exact-v4"
+                prefix 100.122.0.0/16 exact
+            exit
+            policy-statement "aggregate-routes"
+                entry 10
+                    description "vsr2-aggregate"
+                    from
+                        protocol aggregate
+                        prefix-list "vsr2-exact-v4"
+                    exit
+                    action accept
+                        local-preference 10000
+                    exit
+                exit
+            exit
+            policy-statement "connected-routes"
+                entry 5
+                    from
+                        protocol direct
+                    exit
+                    action accept
+                        local-preference 10000
+                    exit
+                exit
+            exit
+            commit
+        exit
+#--------------------------------------------------
 echo "BGP Configuration"
 #--------------------------------------------------
         bgp
             group "ibgp"
+                family ipv4 ipv6 vpn-ipv4 mcast-ipv4 vpn-ipv6
+                next-hop-self
                 type internal
+                export "aggregate-routes" "connected-routes"
                 local-as 65505
                 peer-as 65505
                 local-address 100.64.0.2
@@ -452,6 +521,10 @@ echo "BGP Configuration"
                 neighbor 100.64.0.3
                 exit
                 neighbor 100.64.0.4
+                exit
+                neighbor 100.64.0.5
+                exit
+                neighbor 100.64.0.6
                 exit
             exit
             no shutdown

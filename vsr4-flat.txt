@@ -111,9 +111,14 @@
 /configure router Base interface "vsr4-vsr3" port 1/1/2:5
 /configure router Base interface "vsr4-vsr3" ipv6 address 2001:db8:293:f2f::7/127
 /configure router Base interface "vsr4-vsr3" no shutdown
+/configure router Base interface "vsr4-vsr6" address 10.1.1.21/31
+/configure router Base interface "vsr4-vsr6" port 1/1/4:5
+/configure router Base interface "vsr4-vsr6" ipv6 address 2001:db8:293:f2f::15/127
+/configure router Base interface "vsr4-vsr6" no shutdown
 /configure router Base autonomous-system 65505
 /configure router Base ecmp 2
 /configure router Base router-id 100.64.0.4
+/configure router Base aggregate 100.124.0.0/16 black-hole
 /configure router Base isis 0 router-id 100.64.0.4
 /configure router Base isis 0 area-id 49.0001
 /configure router Base isis 0 traffic-engineering
@@ -132,6 +137,10 @@
 /configure router Base isis 0 interface "vsr4-vsr3" level 1 metric 25000
 /configure router Base isis 0 interface "vsr4-vsr3" level 2 metric 25000
 /configure router Base isis 0 interface "vsr4-vsr3" no shutdown
+/configure router Base isis 0 interface "vsr4-vsr6" interface-type point-to-point
+/configure router Base isis 0 interface "vsr4-vsr6" level 1 metric 25000
+/configure router Base isis 0 interface "vsr4-vsr6" level 2 metric 25000
+/configure router Base isis 0 interface "vsr4-vsr6" no shutdown
 /configure router Base isis 0 no shutdown
 /configure router Base mpls interface "system" no shutdown
 /configure router Base mpls interface "vsr4-vsr1" no shutdown
@@ -151,16 +160,32 @@
 /configure router Base ldp interface-parameters interface "vsr4-vsr2" dual-stack no shutdown
 /configure router Base ldp interface-parameters interface "vsr4-vsr3" dual-stack ipv4 no shutdown
 /configure router Base ldp interface-parameters interface "vsr4-vsr3" dual-stack no shutdown
+/configure router Base ldp interface-parameters interface "vsr4-vsr6" dual-stack ipv4 no shutdown
+/configure router Base ldp interface-parameters interface "vsr4-vsr6" dual-stack no shutdown
 /configure router Base ldp targeted-session
 /configure router Base ldp no shutdown
 /configure service customer 1 create
 /configure service customer 1 description "Default customer"
 /configure router Base isis 0 no shutdown
+/configure router Base policy-options begin
+/configure router Base policy-options prefix-list "vsr4-exact-v4" prefix 100.124.0.0/16 exact
+/configure router Base policy-options policy-statement "aggregate-routes" entry 10 description "vsr4-aggregate"
+/configure router Base policy-options policy-statement "aggregate-routes" entry 10 from protocol aggregate
+/configure router Base policy-options policy-statement "aggregate-routes" entry 10 from prefix-list "vsr4-exact-v4"
+/configure router Base policy-options policy-statement "aggregate-routes" entry 10 action accept local-preference 10000
+/configure router Base policy-options policy-statement "connected-routes" entry 5 from protocol direct
+/configure router Base policy-options policy-statement "connected-routes" entry 5 action accept local-preference 10000
+/configure router Base policy-options commit
+/configure router Base bgp group "ibgp" family ipv4 ipv6 vpn-ipv4 mcast-ipv4 vpn-ipv6
+/configure router Base bgp group "ibgp" next-hop-self
 /configure router Base bgp group "ibgp" type internal
+/configure router Base bgp group "ibgp" export "aggregate-routes" "connected-routes"
 /configure router Base bgp group "ibgp" local-as 65505
 /configure router Base bgp group "ibgp" peer-as 65505
 /configure router Base bgp group "ibgp" local-address 100.64.0.4
 /configure router Base bgp group "ibgp" neighbor 100.64.0.1
 /configure router Base bgp group "ibgp" neighbor 100.64.0.2
 /configure router Base bgp group "ibgp" neighbor 100.64.0.3
+/configure router Base bgp group "ibgp" neighbor 100.64.0.5
+/configure router Base bgp group "ibgp" neighbor 100.64.0.6
 /configure router Base bgp no shutdown
