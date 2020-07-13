@@ -112,6 +112,8 @@
 /configure router Base autonomous-system 65505
 /configure router Base ecmp 2
 /configure router Base router-id 100.64.0.6
+/configure router Base static-route-entry 0.0.0.0/0 black-hole shutdown
+/configure router Base static-route-entry ::/0 black-hole shutdown
 /configure router Base aggregate 100.126.0.0/16
 /configure router Base isis 0 router-id 100.64.0.6
 /configure router Base isis 0 area-id 49.0001
@@ -120,29 +122,29 @@
 /configure router Base isis 0 level 1 wide-metrics-only
 /configure router Base isis 0 level 2 wide-metrics-only
 /configure router Base isis 0 interface "system" no shutdown
-/configure router Base isis 0 interface "vsr6-vsr4" interface-type point-to-point
-/configure router Base isis 0 interface "vsr6-vsr4" level 1 metric 25000
-/configure router Base isis 0 interface "vsr6-vsr4" level 2 metric 25000
-/configure router Base isis 0 interface "vsr6-vsr4" no shutdown
 /configure router Base isis 0 interface "vsr6-vsr1" interface-type point-to-point
 /configure router Base isis 0 interface "vsr6-vsr1" level 1 metric 25000
 /configure router Base isis 0 interface "vsr6-vsr1" level 2 metric 25000
 /configure router Base isis 0 interface "vsr6-vsr1" no shutdown
+/configure router Base isis 0 interface "vsr6-vsr4" interface-type point-to-point
+/configure router Base isis 0 interface "vsr6-vsr4" level 1 metric 25000
+/configure router Base isis 0 interface "vsr6-vsr4" level 2 metric 25000
+/configure router Base isis 0 interface "vsr6-vsr4" no shutdown
 /configure router Base isis 0 no shutdown
 /configure router Base mpls interface "system" no shutdown
-/configure router Base mpls interface "vsr6-vsr4" no shutdown
 /configure router Base mpls interface "vsr6-vsr1" no shutdown
+/configure router Base mpls interface "vsr6-vsr4" no shutdown
 /configure router Base rsvp refresh-reduction-over-bypass enable
 /configure router Base rsvp interface "system" no shutdown
-/configure router Base rsvp interface "vsr6-vsr4" no shutdown
 /configure router Base rsvp interface "vsr6-vsr1" no shutdown
+/configure router Base rsvp interface "vsr6-vsr4" no shutdown
 /configure router Base rsvp no shutdown
 /configure router Base mpls path "loose" no shutdown
 /configure router Base mpls no shutdown
-/configure router Base ldp interface-parameters interface "vsr6-vsr4" dual-stack ipv4 no shutdown
-/configure router Base ldp interface-parameters interface "vsr6-vsr4" dual-stack no shutdown
 /configure router Base ldp interface-parameters interface "vsr6-vsr1" dual-stack ipv4 no shutdown
 /configure router Base ldp interface-parameters interface "vsr6-vsr1" dual-stack no shutdown
+/configure router Base ldp interface-parameters interface "vsr6-vsr4" dual-stack ipv4 no shutdown
+/configure router Base ldp interface-parameters interface "vsr6-vsr4" dual-stack no shutdown
 /configure router Base ldp targeted-session
 /configure router Base ldp no shutdown
 /configure service customer 1 create
@@ -159,14 +161,48 @@
 /configure service ies 1 customer 1 no shutdown
 /configure router Base isis 0 no shutdown
 /configure router Base policy-options begin
+/configure router Base policy-options prefix-list "default-only" prefix 0.0.0.0/0 exact
+/configure router Base policy-options prefix-list "default6-only" prefix ::/0 exact
 /configure router Base policy-options prefix-list "vsr6-exact-v4" prefix 100.126.0.0/16 exact
+/configure router Base policy-options prefix-list "customer6-routes" prefix 10.66.0.0/16 exact
+/configure router Base policy-options prefix-list "customer6-routes6" prefix 2001:db8:6::/48 exact
+/configure router Base policy-options policy-statement "from-customer6" entry 10 from prefix-list "customer6-routes"
+/configure router Base policy-options policy-statement "from-customer6" entry 10 from family ipv4
+/configure router Base policy-options policy-statement "from-customer6" entry 10 action accept
+/configure router Base policy-options policy-statement "from-customer6" default-action next-policy
 /configure router Base policy-options policy-statement "aggregate-routes" entry 10 description "vsr6-aggregate"
 /configure router Base policy-options policy-statement "aggregate-routes" entry 10 from protocol aggregate
 /configure router Base policy-options policy-statement "aggregate-routes" entry 10 from prefix-list "vsr6-exact-v4"
 /configure router Base policy-options policy-statement "aggregate-routes" entry 10 action accept local-preference 10000
 /configure router Base policy-options policy-statement "connected-routes" entry 5 from protocol direct
 /configure router Base policy-options policy-statement "connected-routes" entry 5 action accept local-preference 10000
+/configure router Base policy-options policy-statement "default-originate" entry 10 from protocol static
+/configure router Base policy-options policy-statement "default-originate" entry 10 from prefix-list "default-only"
+/configure router Base policy-options policy-statement "default-originate" entry 10 from family ipv4
+/configure router Base policy-options policy-statement "default-originate" entry 10 action accept
+/configure router Base policy-options policy-statement "default-originate" default-action next-policy
+/configure router Base policy-options policy-statement "from-customer6-v6" entry 10 from prefix-list "customer6-routes6"
+/configure router Base policy-options policy-statement "from-customer6-v6" entry 10 from family ipv6
+/configure router Base policy-options policy-statement "from-customer6-v6" entry 10 action accept
+/configure router Base policy-options policy-statement "from-customer6-v6" default-action next-policy
+/configure router Base policy-options policy-statement "default6-originate" entry 10 from protocol static
+/configure router Base policy-options policy-statement "default6-originate" entry 10 from prefix-list "default6-only"
+/configure router Base policy-options policy-statement "default6-originate" entry 10 from family ipv6
+/configure router Base policy-options policy-statement "default6-originate" entry 10 action accept
+/configure router Base policy-options policy-statement "default6-originate" default-action next-policy
 /configure router Base policy-options commit
+/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv4 resolution-filter ldp
+/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv4 resolution any
+/configure router Base bgp next-hop-resolution label-route-transport-tunnel family vpn resolution-filter ldp
+/configure router Base bgp next-hop-resolution label-route-transport-tunnel family vpn resolution any
+/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv6 resolution-filter ldp
+/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv6 resolution any
+/configure router Base bgp group "ebgp" family ipv4 ipv6
+/configure router Base bgp group "ebgp" type external
+/configure router Base bgp group "ebgp" local-as 65505
+/configure router Base bgp group "ebgp" peer-as 65560
+/configure router Base bgp group "ebgp" neighbor 10.6.6.2 import "from-customer6"
+/configure router Base bgp group "ebgp" neighbor 10.6.6.2 export "default-originate"
 /configure router Base bgp group "ibgp" family ipv4 ipv6 vpn-ipv4 mcast-ipv4 vpn-ipv6
 /configure router Base bgp group "ibgp" next-hop-self
 /configure router Base bgp group "ibgp" type internal

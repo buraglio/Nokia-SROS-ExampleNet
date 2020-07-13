@@ -166,6 +166,7 @@ echo "Port Configuration"
     exit
     port 1/1/5
         ethernet
+            mode hybrid
             encap-type dot1q
             lldp
                 dest-mac nearest-bridge
@@ -395,6 +396,21 @@ echo "Service Configuration"
     service
         customer 1 create
             description "Default customer"
+        exit
+        ies 1 customer 1 create
+            interface "vsr6-host6" create
+            exit
+        exit
+        ies 1 customer 1 create
+            interface "vsr6-host6" create
+                address 10.5.5.1/30
+                ipv6
+                    address 2001:db8:293:f5f::2/127
+                exit
+                sap 1/1/5:0 create
+                exit
+            exit
+            no shutdown
         exit
     exit
 #--------------------------------------------------

@@ -1,3 +1,4 @@
+
 exit all
 configure
 #--------------------------------------------------
@@ -292,6 +293,19 @@ echo "Router (Network Side) Configuration"
         ecmp 2
         router-id 100.64.0.6
 #--------------------------------------------------
+echo "Static Route Configuration"
+#--------------------------------------------------
+        static-route-entry 0.0.0.0/0
+            black-hole
+                shutdown
+            exit
+        exit
+        static-route-entry ::/0
+            black-hole
+                shutdown
+            exit
+        exit
+#--------------------------------------------------
 echo "Aggregate Configuration"
 #--------------------------------------------------
         aggregate 100.126.0.0/16
@@ -312,7 +326,7 @@ echo "ISIS Configuration"
             interface "system"
                 no shutdown
             exit
-            interface "vsr6-vsr4"
+            interface "vsr6-vsr1"
                 interface-type point-to-point
                 level 1
                     metric 25000
@@ -322,7 +336,7 @@ echo "ISIS Configuration"
                 exit
                 no shutdown
             exit
-            interface "vsr6-vsr1"
+            interface "vsr6-vsr4"
                 interface-type point-to-point
                 level 1
                     metric 25000
@@ -341,10 +355,10 @@ echo "MPLS Configuration"
             interface "system"
                 no shutdown
             exit
-            interface "vsr6-vsr4"
+            interface "vsr6-vsr1"
                 no shutdown
             exit
-            interface "vsr6-vsr1"
+            interface "vsr6-vsr4"
                 no shutdown
             exit
         exit
@@ -356,10 +370,10 @@ echo "RSVP Configuration"
             interface "system"
                 no shutdown
             exit
-            interface "vsr6-vsr4"
+            interface "vsr6-vsr1"
                 no shutdown
             exit
-            interface "vsr6-vsr1"
+            interface "vsr6-vsr4"
                 no shutdown
             exit
             no shutdown
@@ -378,13 +392,13 @@ echo "LDP Configuration"
 #--------------------------------------------------
         ldp
             interface-parameters
-                interface "vsr6-vsr4" dual-stack
+                interface "vsr6-vsr1" dual-stack
                     ipv4
                         no shutdown
                     exit
                     no shutdown
                 exit
-                interface "vsr6-vsr1" dual-stack
+                interface "vsr6-vsr4" dual-stack
                     ipv4
                         no shutdown
                     exit
@@ -435,8 +449,32 @@ echo "Policy Configuration"
 #--------------------------------------------------
         policy-options
             begin
+            prefix-list "default-only"
+                prefix 0.0.0.0/0 exact
+            exit
+            prefix-list "default6-only"
+                prefix ::/0 exact
+            exit
             prefix-list "vsr6-exact-v4"
                 prefix 100.126.0.0/16 exact
+            exit
+            prefix-list "customer6-routes"
+                prefix 10.66.0.0/16 exact
+            exit
+            prefix-list "customer6-routes6"
+                prefix 2001:db8:6::/48 exact
+            exit
+            policy-statement "from-customer6"
+                entry 10
+                    from
+                        prefix-list "customer6-routes"
+                        family ipv4
+                    exit
+                    action accept
+                    exit
+                exit
+                default-action next-policy
+                exit
             exit
             policy-statement "aggregate-routes"
                 entry 10
@@ -460,12 +498,82 @@ echo "Policy Configuration"
                     exit
                 exit
             exit
+            policy-statement "default-originate"
+                entry 10
+                    from
+                        protocol static
+                        prefix-list "default-only"
+                        family ipv4
+                    exit
+                    action accept
+                    exit
+                exit
+                default-action next-policy
+                exit
+            exit
+            policy-statement "from-customer6-v6"
+                entry 10
+                    from
+                        prefix-list "customer6-routes6"
+                        family ipv6
+                    exit
+                    action accept
+                    exit
+                exit
+                default-action next-policy
+                exit
+            exit
+            policy-statement "default6-originate"
+                entry 10
+                    from
+                        protocol static
+                        prefix-list "default6-only"
+                        family ipv6
+                    exit
+                    action accept
+                    exit
+                exit
+                default-action next-policy
+                exit
+            exit
             commit
         exit
 #--------------------------------------------------
 echo "BGP Configuration"
 #--------------------------------------------------
         bgp
+            next-hop-resolution
+                label-route-transport-tunnel
+                    family ipv4
+                        resolution-filter
+                            ldp
+                        exit
+                        resolution any
+                    exit
+                    family vpn
+                        resolution-filter
+                            ldp
+                        exit
+                        resolution any
+                    exit
+                    family ipv6
+                        resolution-filter
+                            ldp
+                        exit
+                        resolution any
+                    exit
+                exit
+            exit
+            group "ebgp"
+                family ipv4 ipv6
+                type external
+                local-as 65505
+                peer-as 65560
+                neighbor 10.6.6.2
+                    import "from-customer6"
+                    export "default-originate"
+                exit
+            exit
             group "ibgp"
                 family ipv4 ipv6 vpn-ipv4 mcast-ipv4 vpn-ipv6
                 next-hop-self
