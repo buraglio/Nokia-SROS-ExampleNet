@@ -290,6 +290,7 @@ echo "Router (Network Side) Configuration"
         autonomous-system 65505
         ecmp 2
         router-id 100.64.0.5
+        ldp-shortcut ipv4 ipv6
 #--------------------------------------------------
 echo "Aggregate Configuration"
 #--------------------------------------------------
@@ -566,14 +567,19 @@ echo "BGP Configuration"
                 peer-as 65505
                 local-address 100.64.0.5
                 neighbor 100.64.0.1
+                    advertise-label ipv6 ipv4 include-ldp-prefix
                 exit
                 neighbor 100.64.0.2
+                    advertise-label ipv6 ipv4 include-ldp-prefix
                 exit
                 neighbor 100.64.0.3
+                    advertise-label ipv6 ipv4 include-ldp-prefix
                 exit
                 neighbor 100.64.0.4
+                    advertise-label ipv6 ipv4 include-ldp-prefix
                 exit
                 neighbor 100.64.0.6
+                    advertise-label ipv6 ipv4 include-ldp-prefix
                 exit
             exit
             no shutdown

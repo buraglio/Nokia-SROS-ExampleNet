@@ -111,6 +111,7 @@
 /configure router Base autonomous-system 65505
 /configure router Base ecmp 2
 /configure router Base router-id 100.64.0.5
+/configure router Base ldp-shortcut ipv4 ipv6
 /configure router Base aggregate 100.125.0.0/16 black-hole
 /configure router Base isis 0 router-id 100.64.0.5
 /configure router Base isis 0 area-id 49.0001
@@ -207,9 +208,9 @@
 /configure router Base bgp group "ibgp" local-as 65505
 /configure router Base bgp group "ibgp" peer-as 65505
 /configure router Base bgp group "ibgp" local-address 100.64.0.5
-/configure router Base bgp group "ibgp" neighbor 100.64.0.1
-/configure router Base bgp group "ibgp" neighbor 100.64.0.2
-/configure router Base bgp group "ibgp" neighbor 100.64.0.3
-/configure router Base bgp group "ibgp" neighbor 100.64.0.4
-/configure router Base bgp group "ibgp" neighbor 100.64.0.6
+/configure router Base bgp group "ibgp" neighbor 100.64.0.1 advertise-label ipv6 ipv4 include-ldp-prefix
+/configure router Base bgp group "ibgp" neighbor 100.64.0.2 advertise-label ipv6 ipv4 include-ldp-prefix
+/configure router Base bgp group "ibgp" neighbor 100.64.0.3 advertise-label ipv6 ipv4 include-ldp-prefix
+/configure router Base bgp group "ibgp" neighbor 100.64.0.4 advertise-label ipv6 ipv4 include-ldp-prefix
+/configure router Base bgp group "ibgp" neighbor 100.64.0.6 advertise-label ipv6 ipv4 include-ldp-prefix
 /configure router Base bgp no shutdown
