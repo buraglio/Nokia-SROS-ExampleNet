@@ -1,78 +1,185 @@
-set version 20190319.203446_builder.r1013243
-set system login user northstar uid 2000
-set system login user northstar class super-user
-set system login user northstar authentication encrypted-password "$6$o91dmAnb$jHflYKITyH.uKmU2MMNN7ntRPLz5exLx.ftGaB1KBr00CqMZu4luosxYVOtU3bw32EEJ52s4f3RBoiMQ39mwl1"
-set system root-authentication encrypted-password "$6$DedGMEqr$ml3SevHnR9nv/CB5AQ6wQsXGfuhxWGDhvlAfgtw9wnFFMVs7tazO6CVy6hUWAQC2robpwifq6KTol0gL9AVzs."
-set system services ssh root-login allow
-set system services ssh protocol-version v2
-set system services ssh connection-limit 10
-set system services ssh rate-limit 15
-set system services netconf ssh
-set system host-name vmx7
-set system time-zone America/Chicago
-set system syslog user * any emergency
-set system syslog file messages any notice
-set system syslog file messages authorization info
-set system syslog file interactive-commands interactive-commands any
-set system processes dhcp-service traceoptions file dhcp_logfile
-set system processes dhcp-service traceoptions file size 10m
-set system processes dhcp-service traceoptions level all
-set system processes dhcp-service traceoptions flag packet
-set chassis fpc 0 pic 0 interface-type ge
-set chassis network-services enhanced-ip
-set interfaces ge-0/0/2 description "vmx7 - vmx3"
-set interfaces ge-0/0/2 unit 0 family inet address 10.1.1.18/30
-set interfaces ge-0/0/2 unit 0 family iso
-set interfaces ge-0/0/2 unit 0 family inet6 address 2001:db8:293:293::c/127
-set interfaces ge-0/0/2 unit 0 family mpls
-set interfaces ge-0/0/3 description "vmx7 - vmx4"
-set interfaces ge-0/0/3 unit 0 family inet address 10.1.1.26/30
-set interfaces ge-0/0/3 unit 0 family iso
-set interfaces ge-0/0/3 unit 0 family inet6 address 2001:db8:293:293::18/127
-set interfaces ge-0/0/3 unit 0 family mpls
-set interfaces ge-0/0/9 description "PCE Control Plane"
-set interfaces ge-0/0/9 unit 0 family inet address 172.22.0.7/24
-set interfaces ge-0/0/9 unit 0 family inet6 address 2001:db8:293:b33f::7/64
-set interfaces fxp0 unit 0 family inet dhcp vendor-id Juniper-vmx-VM5E1CE8918B
-set interfaces lo0 unit 0 family inet address 100.64.0.7/32
-set interfaces lo0 unit 0 family iso address 49.0001.0010.0100.2937.00
-set interfaces lo0 unit 0 family inet6 address 2001:db8:293:1::7/128
-set snmp community Juniper clients 172.22.0.0/24
-set routing-options router-id 172.22.0.7
-set protocols bgp group ibgp type internal
-set protocols bgp group ibgp local-address 100.64.0.7
-set protocols bgp group ibgp family inet any
-set protocols bgp group ibgp family inet-vpn unicast
-set protocols bgp group ibgp family inet6 any
-set protocols bgp group ibgp family inet6-vpn any
-set protocols bgp group ibgp peer-as 65505
-set protocols bgp group ibgp local-as 65505
-set protocols bgp group ibgp neighbor 100.64.0.1 description vmx1
-set protocols bgp group ibgp neighbor 100.64.0.2 description vmx2
-set protocols bgp group ibgp neighbor 100.64.0.3 description vmx3
-set protocols bgp group ibgp neighbor 100.64.0.4 description vmx4
-set protocols bgp group ibgp neighbor 100.64.0.6 description vmx6
-set protocols bgp group ibgp neighbor 100.64.0.5 description vmx5
-set protocols isis source-packet-routing srgb start-label 400000
-set protocols isis source-packet-routing srgb index-range 4000
-set protocols isis source-packet-routing node-segment ipv4-index 2001
-set protocols isis source-packet-routing node-segment ipv6-index 3001
-set protocols isis level 1 disable
-set protocols isis level 2 wide-metrics-only
-set protocols isis interface ge-0/0/2.0 point-to-point
-set protocols isis interface ge-0/0/3.0 point-to-point
-set protocols isis interface lo0.0 passive
-set protocols rsvp interface ge-0/0/2.0
-set protocols rsvp interface ge-0/0/3.0
-set protocols mpls lsp-external-controller pccd
-set protocols mpls interface ge-0/0/2.0
-set protocols mpls interface ge-0/0/3.0
-set protocols source-packet-routing lsp-external-controller pccd
-set protocols lldp interface all
-set protocols pcep pce northstar1 local-address 172.22.0.7
-set protocols pcep pce northstar1 destination-ipv4-address 172.22.0.254
-set protocols pcep pce northstar1 destination-port 4189
-set protocols pcep pce northstar1 pce-type active
-set protocols pcep pce northstar1 pce-type stateful
-set protocols pcep pce northstar1 lsp-provisioning
-set protocols pcep pce northstar1 spring-capability
+## Last commit: 2020-07-30 16:54:41 CDT by root
+version 20190319.203446_builder.r1013243;
+system {
+    root-authentication {
+        encrypted-password "$6$CdRewH/F$A/Wbh.30WvOAMvFeuITkzMe/Yb3Rdm7WpJjL/Y4Fr31qb3Z633MU19ZM08b84yFmmxlW/W7p9TjVRkOvg8JuE0"; ## SECRET-DATA
+    }
+    services {
+        ssh {
+            root-login allow;
+            protocol-version v2;
+            connection-limit 10;
+            rate-limit 15;
+        }
+        netconf {
+            ssh;
+        }
+    }
+    host-name vmx7;
+    time-zone America/Chicago;
+    syslog {
+        user * {
+            any emergency;
+        }
+        file messages {
+            any notice;
+            authorization info;
+        }
+        file interactive-commands {
+            interactive-commands any;
+        }
+    }
+    processes {
+        dhcp-service {
+            traceoptions {
+                file dhcp_logfile size 10m;
+                level all;
+                flag packet;
+            }
+        }
+    }
+}
+chassis {
+    fpc 0 {
+        pic 0 {
+            interface-type ge;
+        }
+    }
+    network-services enhanced-ip;
+}
+interfaces {
+    ge-0/0/0 {
+        description "vmx7 - vsr3";
+        unit 0 {
+            family inet {
+                address 10.99.250.1/30;
+            }
+            family iso;
+            family inet6 {
+                address 2001:db8:293:f4f::2/127;
+            }
+            family mpls;
+        }
+    }
+    ge-0/0/1 {
+        description "vmx7 - vsr4";
+        unit 0 {
+            family inet {
+                address 10.99.250.5/30;
+            }
+            family iso;
+            family inet6 {
+                address 2001:db8:293:f4f::4/127;
+            }
+            family mpls;
+        }
+    }
+    ge-0/0/2 {
+        description "Transit Peering";
+        unit 0 {
+            family inet {
+                address 10.99.249.2/30;
+            }
+            family inet6 {
+                address 2001:db8:99:b33f::2/126;
+            }
+        }
+    }
+    fxp0 {
+        unit 0 {
+            family inet {
+                address 10.255.254.7/24;
+            }
+        }
+    }
+    lo0 {
+        unit 0 {
+            family inet {
+                address 100.64.0.7/32;
+            }
+            family iso {
+                address 49.0001.0010.0100.2937.00;
+            }
+            family inet6 {
+                address 2001:db8:293:ffff::7/128;
+            }
+        }
+    }
+}
+routing-options {
+    router-id 100.64.0.7;
+}
+protocols {
+    ldp {
+        interface ge-0/0/0.0;
+        interface ge-0/0/1.0;
+        interface ge-0/0/2.0;
+    }
+    bgp {
+        group ibgp {
+            type internal;
+            local-address 100.64.0.7;
+            family inet {
+                any;
+            }
+            family inet-vpn {
+                unicast;
+            }
+            family inet6 {
+                any;
+            }
+            family inet6-vpn {
+                any;
+            }
+            peer-as 65505;
+            local-as 65505;
+            neighbor 100.64.0.1 {
+                description vmx1;
+            }
+            neighbor 100.64.0.2 {
+                description vmx2;
+            }
+            neighbor 100.64.0.3 {
+                description vmx3;
+            }
+            neighbor 100.64.0.4 {
+                description vmx4;
+            }
+            neighbor 100.64.0.6 {
+                description vmx6;
+            }
+            neighbor 100.64.0.5 {
+                description vmx5;
+            }
+        }
+    }
+    isis {
+        level 1 disable;
+        level 2 wide-metrics-only;
+        interface ge-0/0/0.0 {
+            point-to-point;
+        }
+        interface ge-0/0/1.0 {
+            point-to-point;
+        }
+        interface ge-0/0/2.0 {
+            point-to-point;
+        }
+        interface lo0.0 {
+            passive;
+        }
+    }
+    rsvp {
+        interface ge-0/0/0.0;
+        interface ge-0/0/1.0;
+        interface ge-0/0/2.0;
+    }
+    mpls {
+        interface ge-0/0/0.0;
+        interface ge-0/0/1.0;
+        interface ge-0/0/2.0;
+    }
+    lldp {
+        interface all;
+    }
+}
