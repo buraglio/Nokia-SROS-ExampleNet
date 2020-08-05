@@ -1,4 +1,4 @@
-# jul/29/2020 04:02:00 by RouterOS 6.47.1
+# aug/04/2020 21:36:42 by RouterOS 6.47.1
 # software id =
 #
 #
@@ -16,6 +16,7 @@ add bridge=bridge.5 disabled=yes interface=ether2.5
 add address=172.16.1.1/30 interface=ether1 network=172.16.1.0
 add address=172.16.99.1 interface=loopback0 network=172.16.99.1
 add address=100.66.66.1/30 interface=ether2.5 network=100.66.66.0
+add address=10.99.249.1/30 interface=ether4 network=10.99.249.0
 /ip dhcp-client
 add interface=ether1
 /ip route
@@ -32,6 +33,8 @@ add address-families=ip,ipv6 multihop=yes name=peer2 remote-address=\
     2001:db8:998::2 remote-as=65999 update-source=2001:db8:998::1
 add address-families=ip,ipv6 multihop=yes name=vsr5 out-filter=export-all \
     remote-address=100.66.66.2 remote-as=65505 update-source=100.66.66.1
+add address-families=ip,ipv6 name=vmx7 out-filter=export-all \
+    remote-address=10.99.249.2 remote-as=65505
 /routing filter
 add chain=bgp-in set-bgp-communities=5:5
 add action=accept address-family=ip,ipv6 chain=export-all prefix=\

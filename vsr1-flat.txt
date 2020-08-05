@@ -179,8 +179,16 @@
 /configure router Base policy-options policy-statement "connected-routes" entry 5 from protocol direct
 /configure router Base policy-options policy-statement "connected-routes" entry 5 action accept local-preference 10000
 /configure router Base policy-options commit
-/configure router Base bgp next-hop-resolution label-route-transport-tunnel family vpn resolution-filter ldp
-/configure router Base bgp next-hop-resolution label-route-transport-tunnel family vpn resolution any
+/configure router Base bgp ibgp-multipath
+/configure router Base bgp best-path-selection deterministic-med
+/configure router Base bgp next-hop-resolution shortcut-tunnel family ipv4 resolution-filter ldp
+/configure router Base bgp next-hop-resolution shortcut-tunnel family ipv4 resolution filter
+/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv4 resolution-filter no ldp
+/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv4 resolution disabled
+/configure router Base bgp next-hop-resolution label-route-transport-tunnel family vpn resolution-filter no ldp
+/configure router Base bgp next-hop-resolution label-route-transport-tunnel family vpn resolution disabled
+/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv6 resolution-filter no ldp
+/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv6 resolution disabled
 /configure router Base bgp group "ibgp" family ipv4 ipv6 vpn-ipv4 mcast-ipv4 vpn-ipv6
 /configure router Base bgp group "ibgp" next-hop-self
 /configure router Base bgp group "ibgp" type internal
@@ -188,9 +196,10 @@
 /configure router Base bgp group "ibgp" local-as 65505
 /configure router Base bgp group "ibgp" peer-as 65505
 /configure router Base bgp group "ibgp" local-address 100.64.0.1
-/configure router Base bgp group "ibgp" neighbor 100.64.0.2 advertise-label ipv6 ipv4 include-ldp-prefix
-/configure router Base bgp group "ibgp" neighbor 100.64.0.3 advertise-label ipv6 ipv4 include-ldp-prefix
-/configure router Base bgp group "ibgp" neighbor 100.64.0.4 advertise-label ipv6 ipv4 include-ldp-prefix
-/configure router Base bgp group "ibgp" neighbor 100.64.0.5 advertise-label ipv6 ipv4 include-ldp-prefix
-/configure router Base bgp group "ibgp" neighbor 100.64.0.6 advertise-label ipv6 ipv4 include-ldp-prefix
+/configure router Base bgp group "ibgp" neighbor 100.64.0.2
+/configure router Base bgp group "ibgp" neighbor 100.64.0.3
+/configure router Base bgp group "ibgp" neighbor 100.64.0.4
+/configure router Base bgp group "ibgp" neighbor 100.64.0.5
+/configure router Base bgp group "ibgp" neighbor 100.64.0.6
+/configure router Base bgp group "ibgp" neighbor 100.64.0.7
 /configure router Base bgp no shutdown
