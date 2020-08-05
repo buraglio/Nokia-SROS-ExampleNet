@@ -1,0 +1,17 @@
+Host commands
+
+host3
+ip address add address 10.33.33.2/24 dev ens3
+ip route add default via 10.33.33.1
+ifconfig ens3 up
+
+host4
+ip address add address 10.44.44.2/24 dev ens3
+ip route add default via 10.44.44.1
+ifconfig ens3 up
+
+
+host6
+ip address add address 10.66.66.2/24 dev ens3
+ip route add default via 10.66.66.1
+ifconfig ens3 up
