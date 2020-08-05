@@ -270,6 +270,14 @@ echo "Router (Network Side) Configuration"
             exit
             no shutdown
         exit
+        interface "vsr4-vmx7"
+            address 10.99.250.6/30
+            port 1/1/6:0
+            ipv6
+                address 2001:db8:293:f4f::5/127
+            exit
+            no shutdown
+        exit
         interface "vsr4-vsr1"
             address 10.1.1.9/31
             port 1/1/1:5
@@ -368,6 +376,16 @@ echo "ISIS Configuration"
                 exit
                 no shutdown
             exit
+            interface "vsr4-vmx7"
+                interface-type point-to-point
+                level 1
+                    metric 25000
+                exit
+                level 2
+                    metric 25000
+                exit
+                no shutdown
+            exit
             no shutdown
         exit
 #--------------------------------------------------
@@ -386,6 +404,9 @@ echo "MPLS Configuration"
             interface "vsr4-vsr3"
                 no shutdown
             exit
+            interface "vsr4-vmx7"
+                no shutdown
+            exit
         exit
 #--------------------------------------------------
 echo "RSVP Configuration"
@@ -402,6 +423,9 @@ echo "RSVP Configuration"
                 no shutdown
             exit
             interface "vsr4-vsr3"
+                no shutdown
+            exit
+            interface "vsr4-vmx7"
                 no shutdown
             exit
             no shutdown
@@ -439,6 +463,12 @@ echo "LDP Configuration"
                     no shutdown
                 exit
                 interface "vsr4-vsr6" dual-stack
+                    ipv4
+                        no shutdown
+                    exit
+                    no shutdown
+                exit
+                interface "vsr4-vmx7" dual-stack
                     ipv4
                         no shutdown
                     exit
@@ -505,25 +535,37 @@ echo "Policy Configuration"
 echo "BGP Configuration"
 #--------------------------------------------------
         bgp
+            ibgp-multipath
+            best-path-selection
+                deterministic-med
+            exit
             next-hop-resolution
-                label-route-transport-tunnel
+                shortcut-tunnel
                     family ipv4
                         resolution-filter
                             ldp
                         exit
-                        resolution any
+                        resolution filter
+                    exit
+                exit
+                label-route-transport-tunnel
+                    family ipv4
+                        resolution-filter
+                            no ldp
+                        exit
+                        resolution disabled
                     exit
                     family vpn
                         resolution-filter
-                            ldp
+                            no ldp
                         exit
-                        resolution any
+                        resolution disabled
                     exit
                     family ipv6
                         resolution-filter
-                            ldp
+                            no ldp
                         exit
-                        resolution any
+                        resolution disabled
                     exit
                 exit
             exit
@@ -536,19 +578,16 @@ echo "BGP Configuration"
                 peer-as 65505
                 local-address 100.64.0.4
                 neighbor 100.64.0.1
-                    advertise-label ipv6 ipv4 include-ldp-prefix
                 exit
                 neighbor 100.64.0.2
-                    advertise-label ipv6 ipv4 include-ldp-prefix
                 exit
                 neighbor 100.64.0.3
-                    advertise-label ipv6 ipv4 include-ldp-prefix
                 exit
                 neighbor 100.64.0.5
-                    advertise-label ipv6 ipv4 include-ldp-prefix
                 exit
                 neighbor 100.64.0.6
-                    advertise-label ipv6 ipv4 include-ldp-prefix
+                exit
+                neighbor 100.64.0.7
                 exit
             exit
             no shutdown
