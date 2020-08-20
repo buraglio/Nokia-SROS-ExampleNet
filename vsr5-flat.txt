@@ -1,10 +1,7 @@
 /configure system name "vsr5"
-/configure system dns
 /configure system rollback rollback-location "cf3:/ansible"
-/configure system snmp
 /configure system time sntp shutdown
 /configure system time zone UTC
-/configure system thresholds rmon
 /configure system security management-access-filter ip-filter shutdown
 /configure system security management-access-filter ip-filter default-action permit
 /configure system security management-access-filter ip-filter entry 100 src-ip 192.168.2.0/24
@@ -21,17 +18,15 @@
 /configure system security dist-cpu-protection policy "_default-access-policy"
 /configure system security dist-cpu-protection policy "_default-network-policy" create
 /configure log
-/configure system security
-/configure qos
 /configure sfm 1 sfm-type m-sfm5-12e
 /configure sfm 1 no shutdown
 /configure sfm 2 sfm-type m-sfm5-12e
 /configure sfm 2 no shutdown
 /configure sfm 3 sfm-type m-sfm5-12e
 /configure sfm 3 no shutdown
-/configure card 1 card-type iom3-xp
-/configure card 1 mda 1 mda-type m10-1gb-xp-sfp
+/configure card 1 card-type imm48-1gb-sfp
 /configure card 1 mda 1 no shutdown
+/configure card 1 mda 2 no shutdown
 /configure card 1 no shutdown
 /configure port 1/1/1 ethernet encap-type dot1q
 /configure port 1/1/1 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
@@ -94,6 +89,82 @@
 /configure port 1/1/9 no shutdown
 /configure port 1/1/10 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system
 /configure port 1/1/10 no shutdown
+/configure port 1/1/11 shutdown
+/configure port 1/1/11 ethernet
+/configure port 1/1/12 shutdown
+/configure port 1/1/12 ethernet
+/configure port 1/1/13 shutdown
+/configure port 1/1/13 ethernet
+/configure port 1/1/14 shutdown
+/configure port 1/1/14 ethernet
+/configure port 1/1/15 shutdown
+/configure port 1/1/15 ethernet
+/configure port 1/1/16 shutdown
+/configure port 1/1/16 ethernet
+/configure port 1/1/17 shutdown
+/configure port 1/1/17 ethernet
+/configure port 1/1/18 shutdown
+/configure port 1/1/18 ethernet
+/configure port 1/1/19 shutdown
+/configure port 1/1/19 ethernet
+/configure port 1/1/20 shutdown
+/configure port 1/1/20 ethernet
+/configure port 1/1/21 shutdown
+/configure port 1/1/21 ethernet
+/configure port 1/1/22 shutdown
+/configure port 1/1/22 ethernet
+/configure port 1/1/23 shutdown
+/configure port 1/1/23 ethernet
+/configure port 1/1/24 shutdown
+/configure port 1/1/24 ethernet
+/configure port 1/2/1 shutdown
+/configure port 1/2/1 ethernet
+/configure port 1/2/2 shutdown
+/configure port 1/2/2 ethernet
+/configure port 1/2/3 shutdown
+/configure port 1/2/3 ethernet
+/configure port 1/2/4 shutdown
+/configure port 1/2/4 ethernet
+/configure port 1/2/5 shutdown
+/configure port 1/2/5 ethernet
+/configure port 1/2/6 shutdown
+/configure port 1/2/6 ethernet
+/configure port 1/2/7 shutdown
+/configure port 1/2/7 ethernet
+/configure port 1/2/8 shutdown
+/configure port 1/2/8 ethernet
+/configure port 1/2/9 shutdown
+/configure port 1/2/9 ethernet
+/configure port 1/2/10 shutdown
+/configure port 1/2/10 ethernet
+/configure port 1/2/11 shutdown
+/configure port 1/2/11 ethernet
+/configure port 1/2/12 shutdown
+/configure port 1/2/12 ethernet
+/configure port 1/2/13 shutdown
+/configure port 1/2/13 ethernet
+/configure port 1/2/14 shutdown
+/configure port 1/2/14 ethernet
+/configure port 1/2/15 shutdown
+/configure port 1/2/15 ethernet
+/configure port 1/2/16 shutdown
+/configure port 1/2/16 ethernet
+/configure port 1/2/17 shutdown
+/configure port 1/2/17 ethernet
+/configure port 1/2/18 shutdown
+/configure port 1/2/18 ethernet
+/configure port 1/2/19 shutdown
+/configure port 1/2/19 ethernet
+/configure port 1/2/20 shutdown
+/configure port 1/2/20 ethernet
+/configure port 1/2/21 shutdown
+/configure port 1/2/21 ethernet
+/configure port 1/2/22 shutdown
+/configure port 1/2/22 ethernet
+/configure port 1/2/23 shutdown
+/configure port 1/2/23 ethernet
+/configure port 1/2/24 shutdown
+/configure port 1/2/24 ethernet
 /configure system sync-if-timing begin
 /configure system sync-if-timing commit
 /configure router management
@@ -149,18 +220,18 @@
 /configure router Base ldp interface-parameters interface "vsr5-vsr3" dual-stack no shutdown
 /configure router Base ldp targeted-session
 /configure router Base ldp no shutdown
-/configure service customer 1 create
-/configure service customer 1 description "Default customer"
-/configure service ies 1 customer 1 create
-/configure service ies 1 customer 1 interface "vsr6-host6" create
-/configure service ies 1 customer 1 interface "vsr6-host6"
-/configure service ies 1 customer 1 create
-/configure service ies 1 customer 1 interface "vsr6-host6" create
-/configure service ies 1 customer 1 interface "vsr6-host6" address 10.5.5.1/30
-/configure service ies 1 customer 1 interface "vsr6-host6" ipv6 address 2001:db8:293:f5f::2/127
-/configure service ies 1 customer 1 interface "vsr6-host6" sap 1/1/5:0 create
-/configure service ies 1 customer 1 interface "vsr6-host6" sap 1/1/5:0
-/configure service ies 1 customer 1 no shutdown
+/configure service customer 1 name "1" create
+/configure service customer 1 name "1" description "Default customer"
+/configure service ies 1 name "1" customer 1 create
+/configure service ies 1 name "1" customer 1 interface "vsr6-host6" create
+/configure service ies 1 name "1" customer 1 interface "vsr6-host6"
+/configure service ies 1 name "1" customer 1 create
+/configure service ies 1 name "1" customer 1 interface "vsr6-host6" create
+/configure service ies 1 name "1" customer 1 interface "vsr6-host6" address 10.5.5.1/30
+/configure service ies 1 name "1" customer 1 interface "vsr6-host6" ipv6 address 2001:db8:293:f5f::2/127
+/configure service ies 1 name "1" customer 1 interface "vsr6-host6" sap 1/1/5:0 create
+/configure service ies 1 name "1" customer 1 interface "vsr6-host6" sap 1/1/5:0
+/configure service ies 1 name "1" customer 1 no shutdown
 /configure router Base isis 0 no shutdown
 /configure router Base policy-options begin
 /configure router Base policy-options prefix-list "default-only" prefix 0.0.0.0/0 exact
@@ -199,12 +270,6 @@
 /configure router Base bgp best-path-selection deterministic-med
 /configure router Base bgp next-hop-resolution shortcut-tunnel family ipv4 resolution-filter ldp
 /configure router Base bgp next-hop-resolution shortcut-tunnel family ipv4 resolution filter
-/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv4 resolution-filter no ldp
-/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv4 resolution disabled
-/configure router Base bgp next-hop-resolution label-route-transport-tunnel family vpn resolution-filter no ldp
-/configure router Base bgp next-hop-resolution label-route-transport-tunnel family vpn resolution disabled
-/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv6 resolution-filter no ldp
-/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv6 resolution disabled
 /configure router Base bgp group "ebgp" family ipv4 ipv6
 /configure router Base bgp group "ebgp" type external
 /configure router Base bgp group "ebgp" local-as 65505
@@ -225,6 +290,6 @@
 /configure router Base bgp group "ibgp" neighbor 100.64.0.2
 /configure router Base bgp group "ibgp" neighbor 100.64.0.3
 /configure router Base bgp group "ibgp" neighbor 100.64.0.4
-/configure router Base bgp group "ibgp" neighbor 100.64.0.6 advertise-label ipv6 ipv4 include-ldp-prefix
+/configure router Base bgp group "ibgp" neighbor 100.64.0.6
 /configure router Base bgp group "ibgp" neighbor 100.64.0.7
 /configure router Base bgp no shutdown

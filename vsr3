@@ -11,6 +11,7 @@ echo "System Configuration"
             rollback-location "cf3:/ansible"
         exit
         snmp
+            shutdown
         exit
         time
             sntp
@@ -339,6 +340,16 @@ echo "ISIS Configuration"
             interface "system"
                 no shutdown
             exit
+            interface "vsr3-vmx7"
+                interface-type point-to-point
+                level 1
+                    metric 25000
+                exit
+                level 2
+                    metric 25000
+                exit
+                no shutdown
+            exit
             interface "vsr3-vsr1"
                 interface-type point-to-point
                 level 1
@@ -376,16 +387,6 @@ echo "ISIS Configuration"
                 exit
                 no shutdown
             exit
-            interface "vsr3-vmx7"
-                interface-type point-to-point
-                level 1
-                    metric 25000
-                exit
-                level 2
-                    metric 25000
-                exit
-                no shutdown
-            exit
             no shutdown
         exit
 #--------------------------------------------------
@@ -395,13 +396,13 @@ echo "MPLS Configuration"
             interface "system"
                 no shutdown
             exit
+            interface "vsr3-vmx7"
+                no shutdown
+            exit
             interface "vsr3-vsr1"
                 no shutdown
             exit
             interface "vsr3-vsr5"
-                no shutdown
-            exit
-            interface "vsr3-vmx7"
                 no shutdown
             exit
         exit
@@ -413,13 +414,13 @@ echo "RSVP Configuration"
             interface "system"
                 no shutdown
             exit
+            interface "vsr3-vmx7"
+                no shutdown
+            exit
             interface "vsr3-vsr1"
                 no shutdown
             exit
             interface "vsr3-vsr5"
-                no shutdown
-            exit
-            interface "vsr3-vmx7"
                 no shutdown
             exit
             no shutdown
@@ -438,6 +439,12 @@ echo "LDP Configuration"
 #--------------------------------------------------
         ldp
             interface-parameters
+                interface "vsr3-vmx7" dual-stack
+                    ipv4
+                        no shutdown
+                    exit
+                    no shutdown
+                exit
                 interface "vsr3-vsr1" dual-stack
                     ipv4
                         no shutdown
@@ -457,12 +464,6 @@ echo "LDP Configuration"
                     no shutdown
                 exit
                 interface "vsr3-vsr5" dual-stack
-                    ipv4
-                        no shutdown
-                    exit
-                    no shutdown
-                exit
-                interface "vsr3-vmx7" dual-stack
                     ipv4
                         no shutdown
                     exit
@@ -582,7 +583,6 @@ echo "BGP Configuration"
                 neighbor 100.64.0.6
                 exit
                 neighbor 100.64.0.7
-                    advertise-label ipv6 ipv4
                 exit
             exit
             no shutdown

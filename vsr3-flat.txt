@@ -1,7 +1,7 @@
 /configure system name "vsr3"
 /configure system dns
 /configure system rollback rollback-location "cf3:/ansible"
-/configure system snmp
+/configure system snmp shutdown
 /configure system time sntp shutdown
 /configure system time zone UTC
 /configure system thresholds rmon
@@ -133,6 +133,10 @@
 /configure router Base isis 0 level 1 wide-metrics-only
 /configure router Base isis 0 level 2 wide-metrics-only
 /configure router Base isis 0 interface "system" no shutdown
+/configure router Base isis 0 interface "vsr3-vmx7" interface-type point-to-point
+/configure router Base isis 0 interface "vsr3-vmx7" level 1 metric 25000
+/configure router Base isis 0 interface "vsr3-vmx7" level 2 metric 25000
+/configure router Base isis 0 interface "vsr3-vmx7" no shutdown
 /configure router Base isis 0 interface "vsr3-vsr1" interface-type point-to-point
 /configure router Base isis 0 interface "vsr3-vsr1" level 1 metric 25000
 /configure router Base isis 0 interface "vsr3-vsr1" no shutdown
@@ -148,23 +152,21 @@
 /configure router Base isis 0 interface "vsr3-vsr5" level 1 metric 25000
 /configure router Base isis 0 interface "vsr3-vsr5" level 2 metric 25000
 /configure router Base isis 0 interface "vsr3-vsr5" no shutdown
-/configure router Base isis 0 interface "vsr3-vmx7" interface-type point-to-point
-/configure router Base isis 0 interface "vsr3-vmx7" level 1 metric 25000
-/configure router Base isis 0 interface "vsr3-vmx7" level 2 metric 25000
-/configure router Base isis 0 interface "vsr3-vmx7" no shutdown
 /configure router Base isis 0 no shutdown
 /configure router Base mpls interface "system" no shutdown
+/configure router Base mpls interface "vsr3-vmx7" no shutdown
 /configure router Base mpls interface "vsr3-vsr1" no shutdown
 /configure router Base mpls interface "vsr3-vsr5" no shutdown
-/configure router Base mpls interface "vsr3-vmx7" no shutdown
 /configure router Base rsvp refresh-reduction-over-bypass enable
 /configure router Base rsvp interface "system" no shutdown
+/configure router Base rsvp interface "vsr3-vmx7" no shutdown
 /configure router Base rsvp interface "vsr3-vsr1" no shutdown
 /configure router Base rsvp interface "vsr3-vsr5" no shutdown
-/configure router Base rsvp interface "vsr3-vmx7" no shutdown
 /configure router Base rsvp no shutdown
 /configure router Base mpls path "loose" no shutdown
 /configure router Base mpls no shutdown
+/configure router Base ldp interface-parameters interface "vsr3-vmx7" dual-stack ipv4 no shutdown
+/configure router Base ldp interface-parameters interface "vsr3-vmx7" dual-stack no shutdown
 /configure router Base ldp interface-parameters interface "vsr3-vsr1" dual-stack ipv4 no shutdown
 /configure router Base ldp interface-parameters interface "vsr3-vsr1" dual-stack no shutdown
 /configure router Base ldp interface-parameters interface "vsr3-vsr2" dual-stack ipv4 no shutdown
@@ -173,8 +175,6 @@
 /configure router Base ldp interface-parameters interface "vsr3-vsr4" dual-stack no shutdown
 /configure router Base ldp interface-parameters interface "vsr3-vsr5" dual-stack ipv4 no shutdown
 /configure router Base ldp interface-parameters interface "vsr3-vsr5" dual-stack no shutdown
-/configure router Base ldp interface-parameters interface "vsr3-vmx7" dual-stack ipv4 no shutdown
-/configure router Base ldp interface-parameters interface "vsr3-vmx7" dual-stack no shutdown
 /configure router Base ldp targeted-session
 /configure router Base ldp no shutdown
 /configure service customer 1 create
@@ -211,5 +211,5 @@
 /configure router Base bgp group "ibgp" neighbor 100.64.0.4
 /configure router Base bgp group "ibgp" neighbor 100.64.0.5
 /configure router Base bgp group "ibgp" neighbor 100.64.0.6
-/configure router Base bgp group "ibgp" neighbor 100.64.0.7 advertise-label ipv6 ipv4
+/configure router Base bgp group "ibgp" neighbor 100.64.0.7
 /configure router Base bgp no shutdown
