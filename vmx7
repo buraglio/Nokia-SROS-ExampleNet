@@ -106,8 +106,17 @@ interfaces {
     }
 }
 policy-options {
+    policy-statement next-hop-self {
+        then {
+            next-hop self;
+        }
+    }
     policy-statement reject-all {
         then reject;
+    }
+    policy-statement to-ldp {
+        from protocol bgp;
+        then accept;
     }
 }
 routing-options {
@@ -115,6 +124,7 @@ routing-options {
 }
 protocols {
     ldp {
+        preference 9;
         interface ge-0/0/0.0;
         interface ge-0/0/1.0;
         interface ge-0/0/2.0;
@@ -167,6 +177,15 @@ protocols {
         }
     }
     isis {
+        traffic-engineering {
+            family inet {
+                shortcuts;
+            }
+        }
+        source-packet-routing {
+            srgb start-label 400000 index-range 99999;
+            node-segment ipv4-index 27000;
+        }
         level 1 disable;
         level 2 wide-metrics-only;
         interface ge-0/0/0.0 {
@@ -188,6 +207,7 @@ protocols {
         interface ge-0/0/2.0;
     }
     mpls {
+        traffic-engineering;
         interface ge-0/0/0.0;
         interface ge-0/0/1.0;
         interface ge-0/0/2.0;
@@ -195,4 +215,5 @@ protocols {
     lldp {
         interface all;
     }
+    protection-group;
 }
