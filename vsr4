@@ -96,7 +96,7 @@ echo "Card Configuration"
     card 1
         card-type iom3-xp
         mda 1
-            mda-type m10-1gb-xp-sfp
+            mda-type m10-1gb-sfp-b
             no shutdown
         exit
         no shutdown
@@ -319,6 +319,12 @@ echo "Aggregate Configuration"
 #--------------------------------------------------
         aggregate 100.124.0.0/16 black-hole
 #--------------------------------------------------
+echo "MPLS LABEL RANGE Configuration"
+#--------------------------------------------------
+        mpls-labels
+            sr-labels start 400000 end 500000
+        exit
+#--------------------------------------------------
 echo "ISIS Configuration"
 #--------------------------------------------------
         isis 0
@@ -337,6 +343,17 @@ echo "ISIS Configuration"
                 wide-metrics-only
             exit
             interface "system"
+                ipv4-node-sid index 24000
+                no shutdown
+            exit
+            interface "vsr4-vmx7"
+                interface-type point-to-point
+                level 1
+                    metric 25000
+                exit
+                level 2
+                    metric 25000
+                exit
                 no shutdown
             exit
             interface "vsr4-vsr1"
@@ -376,14 +393,8 @@ echo "ISIS Configuration"
                 exit
                 no shutdown
             exit
-            interface "vsr4-vmx7"
-                interface-type point-to-point
-                level 1
-                    metric 25000
-                exit
-                level 2
-                    metric 25000
-                exit
+            segment-routing
+                prefix-sid-range global
                 no shutdown
             exit
             no shutdown
@@ -395,6 +406,9 @@ echo "MPLS Configuration"
             interface "system"
                 no shutdown
             exit
+            interface "vsr4-vmx7"
+                no shutdown
+            exit
             interface "vsr4-vsr1"
                 no shutdown
             exit
@@ -402,9 +416,6 @@ echo "MPLS Configuration"
                 no shutdown
             exit
             interface "vsr4-vsr3"
-                no shutdown
-            exit
-            interface "vsr4-vmx7"
                 no shutdown
             exit
         exit
@@ -416,6 +427,9 @@ echo "RSVP Configuration"
             interface "system"
                 no shutdown
             exit
+            interface "vsr4-vmx7"
+                no shutdown
+            exit
             interface "vsr4-vsr1"
                 no shutdown
             exit
@@ -423,9 +437,6 @@ echo "RSVP Configuration"
                 no shutdown
             exit
             interface "vsr4-vsr3"
-                no shutdown
-            exit
-            interface "vsr4-vmx7"
                 no shutdown
             exit
             no shutdown
@@ -444,6 +455,12 @@ echo "LDP Configuration"
 #--------------------------------------------------
         ldp
             interface-parameters
+                interface "vsr4-vmx7" dual-stack
+                    ipv4
+                        no shutdown
+                    exit
+                    no shutdown
+                exit
                 interface "vsr4-vsr1" dual-stack
                     ipv4
                         no shutdown
@@ -468,12 +485,6 @@ echo "LDP Configuration"
                     exit
                     no shutdown
                 exit
-                interface "vsr4-vmx7" dual-stack
-                    ipv4
-                        no shutdown
-                    exit
-                    no shutdown
-                exit
             exit
             targeted-session
             exit
@@ -488,6 +499,34 @@ echo "Service Configuration"
         customer 1 create
             description "Default customer"
         exit
+        vprn 111 customer 1 create
+            interface "to_vprn1_cust4" create
+            exit
+        exit
+        vprn 111 customer 1 create
+            shutdown
+            autonomous-system 65111
+            route-distinguisher 65111:10
+            auto-bind-tunnel
+                resolution-filter
+                    ldp
+                exit
+                resolution filter
+            exit
+            vrf-target target:65111:1
+            interface "to_vprn1_cust4" create
+                description "vprn1-vsr4-111-cust4"
+                enable-ingress-stats
+                address 10.11.14.1/30
+                icmp
+                    no mask-reply
+                exit
+                ip-mtu 9000
+                cflowd-parameters
+                    sampling unicast type interface
+                exit
+            exit
+        exit
     exit
 #--------------------------------------------------
 echo "Router (Service Side) Configuration"
@@ -497,6 +536,10 @@ echo "Router (Service Side) Configuration"
 echo "ISIS Configuration"
 #--------------------------------------------------
         isis 0
+            segment-routing
+                prefix-sid-range global
+                no shutdown
+            exit
             no shutdown
         exit
 #--------------------------------------------------

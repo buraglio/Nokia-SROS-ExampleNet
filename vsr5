@@ -476,6 +476,12 @@ echo "Aggregate Configuration"
 #--------------------------------------------------
         aggregate 100.125.0.0/16 black-hole
 #--------------------------------------------------
+echo "MPLS Label Range Configuration"
+#--------------------------------------------------
+        mpls-labels
+            sr-labels start 400000 end 500000
+        exit
+#--------------------------------------------------
 echo "ISIS Configuration"
 #--------------------------------------------------
         isis 0
@@ -493,7 +499,12 @@ echo "ISIS Configuration"
             level 2
                 wide-metrics-only
             exit
+            segment-routing
+                prefix-sid-range global
+                no shutdown
+            exit
             interface "system"
+                ipv4-node-sid index 25000
                 no shutdown
             exit
             interface "vsr5-vsr2"
@@ -586,6 +597,10 @@ echo "Service Configuration"
             interface "vsr6-host6" create
             exit
         exit
+        vprn 111 name "vprn1" customer 1 create
+            interface "to_vprn1_cust5" create
+            exit
+        exit
         ies 1 name "1" customer 1 create
             interface "vsr6-host6" create
                 address 10.5.5.1/30
@@ -596,6 +611,33 @@ echo "Service Configuration"
                 exit
             exit
             no shutdown
+        exit
+        vprn 111 name "vprn1" customer 1 create
+            shutdown
+            autonomous-system 65111
+            route-distinguisher 65111:10
+            auto-bind-tunnel
+                resolution-filter
+                    ldp
+                exit
+                resolution filter
+            exit
+            vrf-target target:65111:1
+            interface "to_vprn1_cust5" create
+                description "vprn1-vsr5-111-cust5"
+                enable-ingress-stats
+                address 10.11.15.1/30
+                icmp
+                    no mask-reply
+                exit
+                ip-mtu 9000
+                cflowd-parameters
+                    sampling unicast type interface
+                exit
+                sap 1/1/5:111 create
+                    description "vprn1-vsr5-111-cust5"
+                exit
+            exit
         exit
     exit
 #--------------------------------------------------

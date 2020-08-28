@@ -188,6 +188,7 @@
 /configure router Base router-id 100.64.0.5
 /configure router Base ldp-shortcut ipv4 ipv6
 /configure router Base aggregate 100.125.0.0/16 black-hole
+/configure router Base mpls-labels sr-labels start 400000 end 500000
 /configure router Base isis 0 router-id 100.64.0.5
 /configure router Base isis 0 area-id 49.0001
 /configure router Base isis 0 traffic-engineering
@@ -196,6 +197,9 @@
 /configure router Base isis 0 multi-topology ipv6-unicast
 /configure router Base isis 0 level 1 wide-metrics-only
 /configure router Base isis 0 level 2 wide-metrics-only
+/configure router Base isis 0 segment-routing prefix-sid-range global
+/configure router Base isis 0 segment-routing no shutdown
+/configure router Base isis 0 interface "system" ipv4-node-sid index 25000
 /configure router Base isis 0 interface "system" no shutdown
 /configure router Base isis 0 interface "vsr5-vsr2" interface-type point-to-point
 /configure router Base isis 0 interface "vsr5-vsr2" level 1 metric 25000
@@ -225,6 +229,9 @@
 /configure service ies 1 name "1" customer 1 create
 /configure service ies 1 name "1" customer 1 interface "vsr6-host6" create
 /configure service ies 1 name "1" customer 1 interface "vsr6-host6"
+/configure service vprn 111 name "vprn1" customer 1 create
+/configure service vprn 111 name "vprn1" customer 1 interface "to_vprn1_cust5" create
+/configure service vprn 111 name "vprn1" customer 1 interface "to_vprn1_cust5"
 /configure service ies 1 name "1" customer 1 create
 /configure service ies 1 name "1" customer 1 interface "vsr6-host6" create
 /configure service ies 1 name "1" customer 1 interface "vsr6-host6" address 10.5.5.1/30
@@ -232,6 +239,22 @@
 /configure service ies 1 name "1" customer 1 interface "vsr6-host6" sap 1/1/5:0 create
 /configure service ies 1 name "1" customer 1 interface "vsr6-host6" sap 1/1/5:0
 /configure service ies 1 name "1" customer 1 no shutdown
+/configure service vprn 111 name "vprn1" customer 1 create
+/configure service vprn 111 name "vprn1" customer 1 shutdown
+/configure service vprn 111 name "vprn1" customer 1 autonomous-system 65111
+/configure service vprn 111 name "vprn1" customer 1 route-distinguisher 65111:10
+/configure service vprn 111 name "vprn1" customer 1 auto-bind-tunnel resolution-filter ldp
+/configure service vprn 111 name "vprn1" customer 1 auto-bind-tunnel resolution filter
+/configure service vprn 111 name "vprn1" customer 1 vrf-target target:65111:1
+/configure service vprn 111 name "vprn1" customer 1 interface "to_vprn1_cust5" create
+/configure service vprn 111 name "vprn1" customer 1 interface "to_vprn1_cust5" description "vprn1-vsr5-111-cust5"
+/configure service vprn 111 name "vprn1" customer 1 interface "to_vprn1_cust5" enable-ingress-stats
+/configure service vprn 111 name "vprn1" customer 1 interface "to_vprn1_cust5" address 10.11.15.1/30
+/configure service vprn 111 name "vprn1" customer 1 interface "to_vprn1_cust5" icmp no mask-reply
+/configure service vprn 111 name "vprn1" customer 1 interface "to_vprn1_cust5" ip-mtu 9000
+/configure service vprn 111 name "vprn1" customer 1 interface "to_vprn1_cust5" cflowd-parameters sampling unicast type interface
+/configure service vprn 111 name "vprn1" customer 1 interface "to_vprn1_cust5" sap 1/1/5:111 create
+/configure service vprn 111 name "vprn1" customer 1 interface "to_vprn1_cust5" sap 1/1/5:111 description "vprn1-vsr5-111-cust5"
 /configure router Base isis 0 no shutdown
 /configure router Base policy-options begin
 /configure router Base policy-options prefix-list "default-only" prefix 0.0.0.0/0 exact
