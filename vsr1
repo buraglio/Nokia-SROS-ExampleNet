@@ -311,6 +311,12 @@ echo "Aggregate Configuration"
 #--------------------------------------------------
         aggregate 100.121.0.0/16 black-hole
 #--------------------------------------------------
+echo "MPLS LABEL RANGE Configuration"
+#--------------------------------------------------
+        mpls-labels
+            sr-labels start 400000 end 500000
+        exit
+#--------------------------------------------------
 echo "ISIS Configuration"
 #--------------------------------------------------
         isis 0
@@ -329,6 +335,7 @@ echo "ISIS Configuration"
                 wide-metrics-only
             exit
             interface "system"
+                ipv4-node-sid index 21000
                 no shutdown
             exit
             interface "vsr1-vsr2"
@@ -366,6 +373,10 @@ echo "ISIS Configuration"
                 level 2
                     metric 25000
                 exit
+                no shutdown
+            exit
+            segment-routing
+                prefix-sid-range global
                 no shutdown
             exit
             no shutdown
@@ -458,6 +469,29 @@ echo "Service Configuration"
         customer 1 create
             description "Default customer"
         exit
+        vprn 111 customer 1 create
+            interface "lo0.111" create
+            exit
+        exit
+        vprn 111 customer 1 create
+            autonomous-system 65505
+            route-distinguisher 65505:1
+            auto-bind-tunnel
+                resolution-filter
+                    ldp
+                exit
+                resolution filter
+            exit
+            vrf-target target:65505:1
+            interface "lo0.111" create
+                address 10.111.1.1/32
+                ipv6
+                    address fc00::111:1:7/128
+                exit
+                loopback
+            exit
+            no shutdown
+        exit
     exit
 #--------------------------------------------------
 echo "Router (Service Side) Configuration"
@@ -467,6 +501,10 @@ echo "Router (Service Side) Configuration"
 echo "ISIS Configuration"
 #--------------------------------------------------
         isis 0
+            segment-routing
+                prefix-sid-range global
+                no shutdown
+            exit
             no shutdown
         exit
 #--------------------------------------------------

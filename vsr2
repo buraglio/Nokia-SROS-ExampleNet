@@ -5,22 +5,14 @@ echo "System Configuration"
 #--------------------------------------------------
     system
         name "vsr2"
-        dns
-        exit
         rollback
             rollback-location "cf3:/ansible"
-        exit
-        snmp
         exit
         time
             sntp
                 shutdown
             exit
             zone UTC
-        exit
-        thresholds
-            rmon
-            exit
         exit
     exit
 #--------------------------------------------------
@@ -64,18 +56,6 @@ echo "Log Configuration"
     log
     exit
 #--------------------------------------------------
-echo "System Security Cpm Hw Filters and PKI Configuration"
-#--------------------------------------------------
-    system
-        security
-        exit
-    exit
-#--------------------------------------------------
-echo "QoS Policy Configuration"
-#--------------------------------------------------
-    qos
-    exit
-#--------------------------------------------------
 echo "Switch Fabric Configuration"
 #--------------------------------------------------
     sfm 1
@@ -94,9 +74,11 @@ echo "Switch Fabric Configuration"
 echo "Card Configuration"
 #--------------------------------------------------
     card 1
-        card-type iom3-xp
+        card-type imm48-1gb-sfp
         mda 1
-            mda-type m10-1gb-xp-sfp
+            no shutdown
+        exit
+        mda 2
             no shutdown
         exit
         no shutdown
@@ -244,6 +226,196 @@ echo "Port Configuration"
         exit
         no shutdown
     exit
+    port 1/1/11
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/1/12
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/1/13
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/1/14
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/1/15
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/1/16
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/1/17
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/1/18
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/1/19
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/1/20
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/1/21
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/1/22
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/1/23
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/1/24
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/1
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/2
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/3
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/4
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/5
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/6
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/7
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/8
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/9
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/10
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/11
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/12
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/13
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/14
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/15
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/16
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/17
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/18
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/19
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/20
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/21
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/22
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/23
+        shutdown
+        ethernet
+        exit
+    exit
+    port 1/2/24
+        shutdown
+        ethernet
+        exit
+    exit
 #--------------------------------------------------
 echo "System Sync-If-Timing Configuration"
 #--------------------------------------------------
@@ -311,6 +483,12 @@ echo "Aggregate Configuration"
 #--------------------------------------------------
         aggregate 100.122.0.0/16 black-hole
 #--------------------------------------------------
+echo "MPLS Label Range Configuration"
+#--------------------------------------------------
+        mpls-labels
+            sr-labels start 400000 end 500000
+        exit
+#--------------------------------------------------
 echo "ISIS Configuration"
 #--------------------------------------------------
         isis 0
@@ -328,7 +506,12 @@ echo "ISIS Configuration"
             level 2
                 wide-metrics-only
             exit
+            segment-routing
+                prefix-sid-range global
+                no shutdown
+            exit
             interface "system"
+                ipv4-node-sid index 22000
                 no shutdown
             exit
             interface "vsr2-vsr1"
@@ -461,7 +644,7 @@ echo "LDP Configuration"
 echo "Service Configuration"
 #--------------------------------------------------
     service
-        customer 1 create
+        customer 1 name "1" create
             description "Default customer"
         exit
     exit
@@ -522,26 +705,6 @@ echo "BGP Configuration"
                             ldp
                         exit
                         resolution filter
-                    exit
-                exit
-                label-route-transport-tunnel
-                    family ipv4
-                        resolution-filter
-                            no ldp
-                        exit
-                        resolution disabled
-                    exit
-                    family vpn
-                        resolution-filter
-                            no ldp
-                        exit
-                        resolution disabled
-                    exit
-                    family ipv6
-                        resolution-filter
-                            no ldp
-                        exit
-                        resolution disabled
                     exit
                 exit
             exit
