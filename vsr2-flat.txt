@@ -24,12 +24,7 @@
 /configure sfm 2 no shutdown
 /configure sfm 3 sfm-type m-sfm5-12e
 /configure sfm 3 no shutdown
-<<<<<<< HEAD
 /configure card 1 card-type imm48-1gb-sfp
-=======
-/configure card 1 card-type iom3-xp
-/configure card 1 mda 1 mda-type m10-1gb-xp-sfp
->>>>>>> 1bad3008a7d3e3b261c7eff8238a46146d7d07d0
 /configure card 1 mda 1 no shutdown
 /configure card 1 mda 2 no shutdown
 /configure card 1 no shutdown

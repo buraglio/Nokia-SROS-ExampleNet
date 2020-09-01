@@ -124,6 +124,7 @@
 /configure router Base router-id 100.64.0.3
 /configure router Base ldp-shortcut ipv4 ipv6
 /configure router Base aggregate 100.123.0.0/16 black-hole
+/configure router Base mpls-labels sr-labels start 400000 end 500000
 /configure router Base isis 0 router-id 100.64.0.3
 /configure router Base isis 0 area-id 49.0001
 /configure router Base isis 0 traffic-engineering
@@ -132,6 +133,7 @@
 /configure router Base isis 0 multi-topology ipv6-unicast
 /configure router Base isis 0 level 1 wide-metrics-only
 /configure router Base isis 0 level 2 wide-metrics-only
+/configure router Base isis 0 interface "system" ipv4-node-sid index 23000
 /configure router Base isis 0 interface "system" no shutdown
 /configure router Base isis 0 interface "vsr3-vmx7" interface-type point-to-point
 /configure router Base isis 0 interface "vsr3-vmx7" level 1 metric 25000
@@ -152,6 +154,8 @@
 /configure router Base isis 0 interface "vsr3-vsr5" level 1 metric 25000
 /configure router Base isis 0 interface "vsr3-vsr5" level 2 metric 25000
 /configure router Base isis 0 interface "vsr3-vsr5" no shutdown
+/configure router Base isis 0 segment-routing prefix-sid-range global
+/configure router Base isis 0 segment-routing no shutdown
 /configure router Base isis 0 no shutdown
 /configure router Base mpls interface "system" no shutdown
 /configure router Base mpls interface "vsr3-vmx7" no shutdown
@@ -179,6 +183,8 @@
 /configure router Base ldp no shutdown
 /configure service customer 1 create
 /configure service customer 1 description "Default customer"
+/configure router Base isis 0 segment-routing prefix-sid-range global
+/configure router Base isis 0 segment-routing no shutdown
 /configure router Base isis 0 no shutdown
 /configure router Base policy-options begin
 /configure router Base policy-options prefix-list "vsr3-exact-v4" prefix 100.123.0.0/16 exact

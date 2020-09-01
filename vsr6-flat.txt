@@ -1,7 +1,7 @@
 /configure system name "vsr6"
 /configure system dns
 /configure system rollback rollback-location "cf3:/ansible"
-/configure system snmp
+/configure system snmp shutdown
 /configure system time sntp shutdown
 /configure system time zone UTC
 /configure system thresholds rmon
@@ -116,6 +116,7 @@
 /configure router Base static-route-entry 0.0.0.0/0 black-hole shutdown
 /configure router Base static-route-entry ::/0 black-hole shutdown
 /configure router Base aggregate 100.126.0.0/16
+/configure router Base mpls-labels sr-labels start 400000 end 500000
 /configure router Base isis 0 router-id 100.64.0.6
 /configure router Base isis 0 area-id 49.0001
 /configure router Base isis 0 traffic-engineering
@@ -124,6 +125,7 @@
 /configure router Base isis 0 multi-topology ipv6-unicast
 /configure router Base isis 0 level 1 wide-metrics-only
 /configure router Base isis 0 level 2 wide-metrics-only
+/configure router Base isis 0 interface "system" ipv4-node-sid index 26000
 /configure router Base isis 0 interface "system" no shutdown
 /configure router Base isis 0 interface "vsr6-vsr1" interface-type point-to-point
 /configure router Base isis 0 interface "vsr6-vsr1" level 1 metric 25000
@@ -133,6 +135,8 @@
 /configure router Base isis 0 interface "vsr6-vsr4" level 1 metric 25000
 /configure router Base isis 0 interface "vsr6-vsr4" level 2 metric 25000
 /configure router Base isis 0 interface "vsr6-vsr4" no shutdown
+/configure router Base isis 0 segment-routing prefix-sid-range global
+/configure router Base isis 0 segment-routing no shutdown
 /configure router Base isis 0 no shutdown
 /configure router Base mpls interface "system" no shutdown
 /configure router Base mpls interface "vsr6-vsr1" no shutdown
@@ -162,6 +166,8 @@
 /configure service ies 1 customer 1 interface "vsr6-host6" sap 1/1/5:0 create
 /configure service ies 1 customer 1 interface "vsr6-host6" sap 1/1/5:0
 /configure service ies 1 customer 1 no shutdown
+/configure router Base isis 0 segment-routing prefix-sid-range global
+/configure router Base isis 0 segment-routing no shutdown
 /configure router Base isis 0 no shutdown
 /configure router Base policy-options begin
 /configure router Base policy-options prefix-list "default-only" prefix 0.0.0.0/0 exact
