@@ -103,6 +103,14 @@ interfaces {
                 address 2001:db8:293:ffff::7/128;
             }
         }
+        unit 111 {
+            family inet {
+                address 10.111.1.7/32;
+            }
+            family inet6 {
+                address fc00:0000::111:1:7/128;
+            }
+        }
     }
 }
 policy-options {
@@ -119,8 +127,18 @@ policy-options {
         then accept;
     }
 }
+routing-instances {
+    111 {
+        instance-type vrf;
+        interface lo0.111;
+        route-distinguisher 65505:7;
+        vrf-target target:65505:1;
+        vrf-table-label;
+    }
+}
 routing-options {
     router-id 100.64.0.7;
+    autonomous-system 65505;
 }
 protocols {
     ldp {
@@ -145,6 +163,7 @@ protocols {
             family inet6-vpn {
                 any;
             }
+            export next-hop-self;
             peer-as 65505;
             local-as 65505;
             neighbor 100.64.0.1 {
@@ -184,7 +203,7 @@ protocols {
         }
         source-packet-routing {
             srgb start-label 400000 index-range 99999;
-            node-segment ipv4-index 27000;
+            node-segment ipv4-index 20000;
         }
         level 1 disable;
         level 2 wide-metrics-only;

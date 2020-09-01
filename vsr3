@@ -320,6 +320,12 @@ echo "Aggregate Configuration"
 #--------------------------------------------------
         aggregate 100.123.0.0/16 black-hole
 #--------------------------------------------------
+echo "MPLS LABEL RANGE Configuration"
+#--------------------------------------------------
+        mpls-labels
+            sr-labels start 400000 end 500000
+        exit
+#--------------------------------------------------
 echo "ISIS Configuration"
 #--------------------------------------------------
         isis 0
@@ -338,6 +344,7 @@ echo "ISIS Configuration"
                 wide-metrics-only
             exit
             interface "system"
+                ipv4-node-sid index 23000
                 no shutdown
             exit
             interface "vsr3-vmx7"
@@ -385,6 +392,10 @@ echo "ISIS Configuration"
                 level 2
                     metric 25000
                 exit
+                no shutdown
+            exit
+            segment-routing
+                prefix-sid-range global
                 no shutdown
             exit
             no shutdown
@@ -492,6 +503,10 @@ echo "Router (Service Side) Configuration"
 echo "ISIS Configuration"
 #--------------------------------------------------
         isis 0
+            segment-routing
+                prefix-sid-range global
+                no shutdown
+            exit
             no shutdown
         exit
 #--------------------------------------------------
