@@ -63,6 +63,7 @@
 /configure port 1/1/5 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
 /configure port 1/1/5 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
 /configure port 1/1/5 no shutdown
+/configure port 1/1/6 ethernet mode hybrid
 /configure port 1/1/6 ethernet encap-type dot1q
 /configure port 1/1/6 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
 /configure port 1/1/6 ethernet lldp dest-mac nearest-bridge notification
@@ -70,6 +71,7 @@
 /configure port 1/1/6 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
 /configure port 1/1/6 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
 /configure port 1/1/6 no shutdown
+/configure port 1/1/7 ethernet mode hybrid
 /configure port 1/1/7 ethernet encap-type dot1q
 /configure port 1/1/7 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
 /configure port 1/1/7 ethernet lldp dest-mac nearest-bridge notification
@@ -246,6 +248,16 @@
 /configure router Base ldp no shutdown
 /configure service customer 1 name "1" create
 /configure service customer 1 name "1" description "Default customer"
+/configure service ies 1 name "1" customer 1 create
+/configure service ies 1 name "1" customer 1 interface "vsr2-sinkhole" create
+/configure service ies 1 name "1" customer 1 interface "vsr2-sinkhole"
+/configure service ies 1 name "1" customer 1 create
+/configure service ies 1 name "1" customer 1 interface "vsr2-sinkhole" create
+/configure service ies 1 name "1" customer 1 interface "vsr2-sinkhole" address 10.250.250.2/30
+/configure service ies 1 name "1" customer 1 interface "vsr2-sinkhole" ipv6 address 2001:db8:293:eee::3/127
+/configure service ies 1 name "1" customer 1 interface "vsr2-sinkhole" sap 1/1/6:0 create
+/configure service ies 1 name "1" customer 1 interface "vsr2-sinkhole" sap 1/1/6:0
+/configure service ies 1 name "1" customer 1 no shutdown
 /configure router Base isis 0 no shutdown
 /configure router Base policy-options begin
 /configure router Base policy-options prefix-list "vsr2-exact-v4" prefix 100.122.0.0/16 exact

@@ -163,6 +163,7 @@ echo "Port Configuration"
     exit
     port 1/1/6
         ethernet
+            mode hybrid
             encap-type dot1q
             lldp
                 dest-mac nearest-bridge
@@ -178,6 +179,7 @@ echo "Port Configuration"
     exit
     port 1/1/7
         ethernet
+            mode hybrid
             encap-type dot1q
             lldp
                 dest-mac nearest-bridge
@@ -646,6 +648,21 @@ echo "Service Configuration"
     service
         customer 1 name "1" create
             description "Default customer"
+        exit
+        ies 1 name "1" customer 1 create
+            interface "vsr2-sinkhole" create
+            exit
+        exit
+        ies 1 name "1" customer 1 create
+            interface "vsr2-sinkhole" create
+                address 10.250.250.2/30
+                ipv6
+                    address 2001:db8:293:eee::3/127
+                exit
+                sap 1/1/6:0 create
+                exit
+            exit
+            no shutdown
         exit
     exit
 #--------------------------------------------------
