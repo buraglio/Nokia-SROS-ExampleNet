@@ -260,18 +260,38 @@
 /configure service ies 1 name "1" customer 1 no shutdown
 /configure router Base isis 0 no shutdown
 /configure router Base policy-options begin
+/configure router Base policy-options prefix-list "sinkhole-v4" prefix 100.64.0.0/10 exact
+/configure router Base policy-options prefix-list "sinkhole-v6" prefix 2001:db8::/32 exact
 /configure router Base policy-options prefix-list "vsr2-exact-v4" prefix 100.122.0.0/16 exact
+/configure router Base policy-options policy-statement "reject-all" default-action drop
+/configure router Base policy-options policy-statement "sinkhole-accept" description "accept supernet routes from sinkhole"
+/configure router Base policy-options policy-statement "sinkhole-accept" entry 10 from prefix-list "sinkhole-v4"
+/configure router Base policy-options policy-statement "sinkhole-accept" default-action accept
 /configure router Base policy-options policy-statement "aggregate-routes" entry 10 description "vsr2-aggregate"
 /configure router Base policy-options policy-statement "aggregate-routes" entry 10 from protocol aggregate
 /configure router Base policy-options policy-statement "aggregate-routes" entry 10 from prefix-list "vsr2-exact-v4"
 /configure router Base policy-options policy-statement "aggregate-routes" entry 10 action accept local-preference 10000
 /configure router Base policy-options policy-statement "connected-routes" entry 5 from protocol direct
 /configure router Base policy-options policy-statement "connected-routes" entry 5 action accept local-preference 10000
+/configure router Base policy-options policy-statement "sinkhole6-accept" description "accept supernet v6 routes from sinkhole"
+/configure router Base policy-options policy-statement "sinkhole6-accept" entry 10 from prefix-list "sinkhole-v6"
+/configure router Base policy-options policy-statement "sinkhole6-accept" default-action accept
 /configure router Base policy-options commit
 /configure router Base bgp ibgp-multipath
 /configure router Base bgp best-path-selection deterministic-med
 /configure router Base bgp next-hop-resolution shortcut-tunnel family ipv4 resolution-filter ldp
 /configure router Base bgp next-hop-resolution shortcut-tunnel family ipv4 resolution filter
+/configure router Base bgp group "ebgp" family ipv4 ipv6
+/configure router Base bgp group "ebgp" type external
+/configure router Base bgp group "ebgp" local-as 65505
+/configure router Base bgp group "ebgp" neighbor 10.250.250.1 multihop 32
+/configure router Base bgp group "ebgp" neighbor 10.250.250.1 import "sinkhole-accept"
+/configure router Base bgp group "ebgp" neighbor 10.250.250.1 export "reject-all"
+/configure router Base bgp group "ebgp" neighbor 10.250.250.1 peer-as 65534
+/configure router Base bgp group "ebgp" neighbor 2001:db8:293:eee::2 multihop 32
+/configure router Base bgp group "ebgp" neighbor 2001:db8:293:eee::2 import "sinkhole6-accept"
+/configure router Base bgp group "ebgp" neighbor 2001:db8:293:eee::2 export "reject-all"
+/configure router Base bgp group "ebgp" neighbor 2001:db8:293:eee::2 peer-as 65534
 /configure router Base bgp group "ibgp" family ipv4 ipv6 vpn-ipv4 mcast-ipv4 vpn-ipv6
 /configure router Base bgp group "ibgp" next-hop-self
 /configure router Base bgp group "ibgp" type internal

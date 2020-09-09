@@ -680,8 +680,28 @@ echo "Policy Configuration"
 #--------------------------------------------------
         policy-options
             begin
+            prefix-list "sinkhole-v4"
+                prefix 100.64.0.0/10 exact
+            exit
+            prefix-list "sinkhole-v6"
+                prefix 2001:db8::/32 exact
+            exit
             prefix-list "vsr2-exact-v4"
                 prefix 100.122.0.0/16 exact
+            exit
+            policy-statement "reject-all"
+                default-action drop
+                exit
+            exit
+            policy-statement "sinkhole-accept"
+                description "accept supernet routes from sinkhole"
+                entry 10
+                    from
+                        prefix-list "sinkhole-v4"
+                    exit
+                exit
+                default-action accept
+                exit
             exit
             policy-statement "aggregate-routes"
                 entry 10
@@ -705,6 +725,16 @@ echo "Policy Configuration"
                     exit
                 exit
             exit
+            policy-statement "sinkhole6-accept"
+                description "accept supernet v6 routes from sinkhole"
+                entry 10
+                    from
+                        prefix-list "sinkhole-v6"
+                    exit
+                exit
+                default-action accept
+                exit
+            exit
             commit
         exit
 #--------------------------------------------------
@@ -723,6 +753,23 @@ echo "BGP Configuration"
                         exit
                         resolution filter
                     exit
+                exit
+            exit
+            group "ebgp"
+                family ipv4 ipv6
+                type external
+                local-as 65505
+                neighbor 10.250.250.1
+                    multihop 32
+                    import "sinkhole-accept"
+                    export "reject-all"
+                    peer-as 65534
+                exit
+                neighbor 2001:db8:293:eee::2
+                    multihop 32
+                    import "sinkhole6-accept"
+                    export "reject-all"
+                    peer-as 65534
                 exit
             exit
             group "ibgp"
