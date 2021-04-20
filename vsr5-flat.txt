@@ -18,18 +18,16 @@
 /configure system security dist-cpu-protection policy "_default-access-policy"
 /configure system security dist-cpu-protection policy "_default-network-policy" create
 /configure log
-/configure card 1 card-type "xcm-2s"
-/configure card 1 mda 1 mda-type "s36-400gb-qsfpdd"
-/configure card 2 card-type "xcm-2s"
-/configure card 2 mda 1 mda-type "s36-400gb-qsfpdd"
-/configure system power-management mode none
-/configure system power-shelf 1 power-shelf-type "ps-a4-shelf-dc"
-/configure system power-shelf 1 power-module 1 power-module-type ps-a-dc-6000
-/configure system power-shelf 1 power-module 2 power-module-type ps-a-dc-6000
-/configure system power-shelf 1 power-module 3 power-module-type ps-a-dc-6000
-/configure system power-shelf 1 power-module 4 power-module-type ps-a-dc-6000
-/configure sfm 1 sfm-type sfm-2s
-/configure sfm 2 sfm-type sfm-2s
+/configure sfm 1 sfm-type m-sfm5-12e
+/configure sfm 1 no shutdown
+/configure sfm 2 sfm-type m-sfm5-12e
+/configure sfm 2 no shutdown
+/configure sfm 3 sfm-type m-sfm5-12e
+/configure sfm 3 no shutdown
+/configure card 1 card-type imm48-1gb-sfp
+/configure card 1 mda 1 no shutdown
+/configure card 1 mda 2 no shutdown
+/configure card 1 no shutdown
 /configure port 1/1/1 ethernet encap-type dot1q
 /configure port 1/1/1 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
 /configure port 1/1/1 ethernet lldp dest-mac nearest-bridge notification
