@@ -112,11 +112,11 @@
 /configure router Base interface "vsr1-vsr2" ipv6 address 2001:db8:293:f2f::2/127
 /configure router Base interface "vsr1-vsr2" no shutdown
 /configure router Base interface "vsr1-vsr3" address 10.2.1.2/31
-/configure router Base interface "vsr1-vsr3" port 1/1/c3/1:5
+/configure router Base interface "vsr1-vsr3" port 1/1/c2/1:5
 /configure router Base interface "vsr1-vsr3" ipv6 address 2001:db8:293:f3f::2/127
 /configure router Base interface "vsr1-vsr3" no shutdown
 /configure router Base interface "vsr1-vsr4" address 10.1.1.8/31
-/configure router Base interface "vsr1-vsr4" port 1/1/c2/1:5
+/configure router Base interface "vsr1-vsr4" port 1/1/c3/1:5
 /configure router Base interface "vsr1-vsr4" ipv6 address 2001:db8:293:f2f::8/127
 /configure router Base interface "vsr1-vsr4" no shutdown
 /configure router Base interface "vsr1-vsr6" address 10.2.1.23/31

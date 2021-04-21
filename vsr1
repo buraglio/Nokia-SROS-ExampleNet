@@ -318,7 +318,7 @@ echo "Router (Network Side) Configuration"
         exit
         interface "vsr1-vsr3"
             address 10.2.1.2/31
-            port 1/1/c3/1:5
+            port 1/1/c2/1:5
             ipv6
                 address 2001:db8:293:f3f::2/127
             exit
@@ -326,7 +326,7 @@ echo "Router (Network Side) Configuration"
         exit
         interface "vsr1-vsr4"
             address 10.1.1.8/31
-            port 1/1/c2/1:5
+            port 1/1/c3/1:5
             ipv6
                 address 2001:db8:293:f2f::8/127
             exit
