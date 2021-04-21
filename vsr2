@@ -439,7 +439,7 @@ echo "Router (Network Side) Configuration"
         exit
         interface "vsr2-vsr1"
             address 10.1.1.3/31
-            port 1/1/c1/1:5
+            port 1/1/c2/1:5
             ipv6
                 address 2001:db8:293:f2f::3/127
             exit
@@ -455,13 +455,13 @@ echo "Router (Network Side) Configuration"
         exit
         interface "vsr2-vsr4"
             address 10.2.1.4/31
-            port 1/1/c2/1:5
+            port 1/1/c1/1:5
             ipv6
                 address 2001:db8:293:f3f::4/127
             exit
             no shutdown
         exit
-        interface "vsr2-vsr6"
+        interface "vsr2-vsr5"
             address 10.1.1.25/31
             port 1/1/c4/1:5
             ipv6
@@ -536,7 +536,7 @@ echo "ISIS Configuration"
                 exit
                 no shutdown
             exit
-            interface "vsr2-vsr6"
+            interface "vsr2-vsr5"
                 interface-type point-to-point
                 level 1
                     metric 25000
@@ -564,7 +564,7 @@ echo "MPLS Configuration"
             interface "vsr2-vsr4"
                 no shutdown
             exit
-            interface "vsr2-vsr6"
+            interface "vsr2-vsr5"
                 no shutdown
             exit
         exit
@@ -585,7 +585,7 @@ echo "RSVP Configuration"
             interface "vsr2-vsr4"
                 no shutdown
             exit
-            interface "vsr2-vsr6"
+            interface "vsr2-vsr5"
                 no shutdown
             exit
             no shutdown
@@ -624,7 +624,7 @@ echo "LDP Configuration"
                     exit
                     no shutdown
                 exit
-                interface "vsr2-vsr6" dual-stack
+                interface "vsr2-vsr5" dual-stack
                     ipv4
                         no shutdown
                     exit
