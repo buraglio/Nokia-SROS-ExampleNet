@@ -159,19 +159,19 @@
 /configure router Base interface "vsr3-vmx7" ipv6 address 2001:db8:293:f4f::3/127
 /configure router Base interface "vsr3-vmx7" no shutdown
 /configure router Base interface "vsr3-vsr1" address 10.2.1.3/31
-/configure router Base interface "vsr3-vsr1" port 1/1/3:5
+/configure router Base interface "vsr3-vsr1" port 1/1/c3/1:5
 /configure router Base interface "vsr3-vsr1" ipv6 address 2001:db8:293:f2f::3/127
 /configure router Base interface "vsr3-vsr1" no shutdown
 /configure router Base interface "vsr3-vsr2" address 10.1.1.4/31
-/configure router Base interface "vsr3-vsr2" port 1/1/2:5
+/configure router Base interface "vsr3-vsr2" port 1/1/c2/1:5
 /configure router Base interface "vsr3-vsr2" ipv6 address 2001:db8:293:f2f::5/127
 /configure router Base interface "vsr3-vsr2" no shutdown
 /configure router Base interface "vsr3-vsr4" address 10.1.1.6/31
-/configure router Base interface "vsr3-vsr4" port 1/1/1:5
+/configure router Base interface "vsr3-vsr4" port 1/1/c1/1:5
 /configure router Base interface "vsr3-vsr4" ipv6 address 2001:db8:293:f2f::6/127
 /configure router Base interface "vsr3-vsr4" no shutdown
 /configure router Base interface "vsr3-vsr5" address 10.1.1.27/31
-/configure router Base interface "vsr3-vsr5" port 1/1/4:5
+/configure router Base interface "vsr3-vsr5" port 1/1/c4/1:5
 /configure router Base interface "vsr3-vsr5" ipv6 address 2001:db8:293:f2f::1b/127
 /configure router Base interface "vsr3-vsr5" no shutdown
 /configure router Base autonomous-system 65505
