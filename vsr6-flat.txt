@@ -1,10 +1,21 @@
 /configure system name "vsr6"
-/configure system dns
+/configure system power-management mode none
+/configure system power-shelf 1 power-shelf-type ps-a4-shelf-dc
+/configure system power-shelf 1 power-module 1 power-module-type ps-a-dc-6000
+/configure system power-shelf 1 power-module 1 no shutdown
+/configure system power-shelf 1 power-module 2 power-module-type ps-a-dc-6000
+/configure system power-shelf 1 power-module 2 no shutdown
+/configure system power-shelf 1 power-module 3 power-module-type ps-a-dc-6000
+/configure system power-shelf 1 power-module 3 no shutdown
+/configure system power-shelf 1 power-module 4 power-module-type ps-a-dc-6000
+/configure system power-shelf 1 power-module 4 no shutdown
+/configure system power-shelf 1 no shutdown
 /configure system rollback rollback-location "cf3:/ansible"
-/configure system snmp shutdown
 /configure system time sntp shutdown
 /configure system time zone UTC
-/configure system thresholds rmon
+/configure system bluetooth module A
+/configure system bluetooth module B
+/configure system bluetooth power off
 /configure system security management-access-filter ip-filter shutdown
 /configure system security management-access-filter ip-filter default-action permit
 /configure system security management-access-filter ip-filter entry 100 src-ip 192.168.2.0/24
@@ -13,88 +24,130 @@
 /configure system security management-access-filter ip-filter entry 100 action permit
 /configure system security management-access-filter ip-filter no shutdown
 /configure system security per-peer-queuing
-/configure system security cpu-protection link-specific-rate max
-/configure system security cpu-protection policy 254 create
-/configure system security cpu-protection policy 255 create
-/configure system security cpu-protection port-overall-rate 15000
 /configure system security dist-cpu-protection policy "_default-access-policy" create
 /configure system security dist-cpu-protection policy "_default-access-policy"
 /configure system security dist-cpu-protection policy "_default-network-policy" create
 /configure log
-/configure system security
-/configure qos
-/configure sfm 1 sfm-type m-sfm5-12e
+/configure sfm 1 sfm-type sfm-2s
 /configure sfm 1 no shutdown
-/configure sfm 2 sfm-type m-sfm5-12e
+/configure sfm 2 sfm-type sfm-2s
 /configure sfm 2 no shutdown
-/configure sfm 3 sfm-type m-sfm5-12e
-/configure sfm 3 no shutdown
-/configure card 1 card-type iom3-xp
-/configure card 1 mda 1 mda-type m10-1gb-xp-sfp
+/configure card 1 card-type xcm-2s
+/configure card 1 mda 1 mda-type s36-400gb-qsfpdd
 /configure card 1 mda 1 no shutdown
 /configure card 1 no shutdown
-/configure port 1/1/1 ethernet encap-type dot1q
-/configure port 1/1/1 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
-/configure port 1/1/1 ethernet lldp dest-mac nearest-bridge notification
-/configure port 1/1/1 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
-/configure port 1/1/1 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
-/configure port 1/1/1 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
-/configure port 1/1/1 no shutdown
-/configure port 1/1/2 ethernet encap-type dot1q
-/configure port 1/1/2 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
-/configure port 1/1/2 ethernet lldp dest-mac nearest-bridge notification
-/configure port 1/1/2 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
-/configure port 1/1/2 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
-/configure port 1/1/2 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
-/configure port 1/1/2 no shutdown
-/configure port 1/1/3 ethernet encap-type dot1q
-/configure port 1/1/3 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
-/configure port 1/1/3 ethernet lldp dest-mac nearest-bridge notification
-/configure port 1/1/3 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
-/configure port 1/1/3 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
-/configure port 1/1/3 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
-/configure port 1/1/3 no shutdown
-/configure port 1/1/4 ethernet encap-type dot1q
-/configure port 1/1/4 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
-/configure port 1/1/4 ethernet lldp dest-mac nearest-bridge notification
-/configure port 1/1/4 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
-/configure port 1/1/4 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
-/configure port 1/1/4 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
-/configure port 1/1/4 no shutdown
-/configure port 1/1/5 ethernet mode hybrid
-/configure port 1/1/5 ethernet encap-type dot1q
-/configure port 1/1/5 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
-/configure port 1/1/5 ethernet lldp dest-mac nearest-bridge notification
-/configure port 1/1/5 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
-/configure port 1/1/5 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
-/configure port 1/1/5 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
-/configure port 1/1/5 no shutdown
-/configure port 1/1/6 ethernet encap-type dot1q
-/configure port 1/1/6 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
-/configure port 1/1/6 ethernet lldp dest-mac nearest-bridge notification
-/configure port 1/1/6 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
-/configure port 1/1/6 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
-/configure port 1/1/6 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
-/configure port 1/1/6 no shutdown
-/configure port 1/1/7 ethernet encap-type dot1q
-/configure port 1/1/7 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
-/configure port 1/1/7 ethernet lldp dest-mac nearest-bridge notification
-/configure port 1/1/7 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
-/configure port 1/1/7 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
-/configure port 1/1/7 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
-/configure port 1/1/7 no shutdown
-/configure port 1/1/8 ethernet mode hybrid
-/configure port 1/1/8 ethernet encap-type dot1q
-/configure port 1/1/8 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
-/configure port 1/1/8 ethernet lldp dest-mac nearest-bridge notification
-/configure port 1/1/8 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
-/configure port 1/1/8 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
-/configure port 1/1/8 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
-/configure port 1/1/8 no shutdown
-/configure port 1/1/9 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system
-/configure port 1/1/9 no shutdown
-/configure port 1/1/10 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system
-/configure port 1/1/10 no shutdown
+/configure card 2 card-type xcm-2s
+/configure card 2 mda 1 mda-type s36-400gb-qsfpdd
+/configure card 2 mda 1 no shutdown
+/configure card 2 no shutdown
+/configure port 1/1/c1 connector breakout c1-100g
+/configure port 1/1/c1 no shutdown
+/configure port 1/1/c2 connector breakout c1-100g
+/configure port 1/1/c2 no shutdown
+/configure port 1/1/c3 connector breakout c1-100g
+/configure port 1/1/c3 no shutdown
+/configure port 1/1/c4 connector breakout c1-100g
+/configure port 1/1/c4 no shutdown
+/configure port 1/1/c5 shutdown
+/configure port 1/1/c6 shutdown
+/configure port 1/1/c7 shutdown
+/configure port 1/1/c8 shutdown
+/configure port 1/1/c9 shutdown
+/configure port 1/1/c10 shutdown
+/configure port 1/1/c11 shutdown
+/configure port 1/1/c12 shutdown
+/configure port 1/1/c13 shutdown
+/configure port 1/1/c14 shutdown
+/configure port 1/1/c15 shutdown
+/configure port 1/1/c16 shutdown
+/configure port 1/1/c17 shutdown
+/configure port 1/1/c18 shutdown
+/configure port 1/1/c19 shutdown
+/configure port 1/1/c20 shutdown
+/configure port 1/1/c21 shutdown
+/configure port 1/1/c22 shutdown
+/configure port 1/1/c23 shutdown
+/configure port 1/1/c24 shutdown
+/configure port 1/1/c25 shutdown
+/configure port 1/1/c26 shutdown
+/configure port 1/1/c27 shutdown
+/configure port 1/1/c28 shutdown
+/configure port 1/1/c29 shutdown
+/configure port 1/1/c30 shutdown
+/configure port 1/1/c31 shutdown
+/configure port 1/1/c32 shutdown
+/configure port 1/1/c33 shutdown
+/configure port 1/1/c34 shutdown
+/configure port 1/1/c35 shutdown
+/configure port 1/1/c36 shutdown
+/configure port 2/1/c1 shutdown
+/configure port 2/1/c2 shutdown
+/configure port 2/1/c3 shutdown
+/configure port 2/1/c4 shutdown
+/configure port 2/1/c5 shutdown
+/configure port 2/1/c6 shutdown
+/configure port 2/1/c7 shutdown
+/configure port 2/1/c8 shutdown
+/configure port 2/1/c9 shutdown
+/configure port 2/1/c10 shutdown
+/configure port 2/1/c11 shutdown
+/configure port 2/1/c12 shutdown
+/configure port 2/1/c13 shutdown
+/configure port 2/1/c14 shutdown
+/configure port 2/1/c15 shutdown
+/configure port 2/1/c16 shutdown
+/configure port 2/1/c17 shutdown
+/configure port 2/1/c18 shutdown
+/configure port 2/1/c19 shutdown
+/configure port 2/1/c20 shutdown
+/configure port 2/1/c21 shutdown
+/configure port 2/1/c22 shutdown
+/configure port 2/1/c23 shutdown
+/configure port 2/1/c24 shutdown
+/configure port 2/1/c25 shutdown
+/configure port 2/1/c26 shutdown
+/configure port 2/1/c27 shutdown
+/configure port 2/1/c28 shutdown
+/configure port 2/1/c29 shutdown
+/configure port 2/1/c30 shutdown
+/configure port 2/1/c31 shutdown
+/configure port 2/1/c32 shutdown
+/configure port 2/1/c33 shutdown
+/configure port 2/1/c34 shutdown
+/configure port 2/1/c35 shutdown
+/configure port 2/1/c36 shutdown
+/configure port 1/1/c1/1 ethernet encap-type dot1q
+/configure port 1/1/c1/1 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
+/configure port 1/1/c1/1 ethernet lldp dest-mac nearest-bridge notification
+/configure port 1/1/c1/1 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
+/configure port 1/1/c1/1 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
+/configure port 1/1/c1/1 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
+/configure port 1/1/c1/1 no shutdown
+/configure port 1/1/c2/1 ethernet encap-type dot1q
+/configure port 1/1/c2/1 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
+/configure port 1/1/c2/1 ethernet lldp dest-mac nearest-bridge notification
+/configure port 1/1/c2/1 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
+/configure port 1/1/c2/1 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
+/configure port 1/1/c2/1 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
+/configure port 1/1/c2/1 no shutdown
+/configure port 1/1/c3/1 ethernet encap-type dot1q
+/configure port 1/1/c3/1 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
+/configure port 1/1/c3/1 ethernet lldp dest-mac nearest-bridge notification
+/configure port 1/1/c3/1 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
+/configure port 1/1/c3/1 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
+/configure port 1/1/c3/1 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
+/configure port 1/1/c3/1 no shutdown
+/configure port 1/1/c4/1 ethernet encap-type dot1q
+/configure port 1/1/c4/1 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
+/configure port 1/1/c4/1 ethernet lldp dest-mac nearest-bridge notification
+/configure port 1/1/c4/1 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
+/configure port 1/1/c4/1 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
+/configure port 1/1/c4/1 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
+/configure port 1/1/c4/1 no shutdown
+/configure port A/3 shutdown
+/configure port A/3 ethernet
+/configure port B/3 shutdown
+/configure port B/3 ethernet
 /configure system sync-if-timing begin
 /configure system sync-if-timing commit
 /configure router management
@@ -102,13 +155,13 @@
 /configure router Base interface "system" ipv6 address 2001:db8:293:ffff::6/128
 /configure router Base interface "system" no shutdown
 /configure router Base interface "vsr6-vsr1" address 10.2.1.22/31
-/configure router Base interface "vsr6-vsr1" port 1/1/1:5
+/configure router Base interface "vsr6-vsr1" port 1/1/c1/1:5
 /configure router Base interface "vsr6-vsr1" ipv6 address 2001:db8:293:f3f::16/127
 /configure router Base interface "vsr6-vsr1" no shutdown
-/configure router Base interface "vsr6-vsr4" address 10.1.1.20/31
-/configure router Base interface "vsr6-vsr4" port 1/1/2:5
-/configure router Base interface "vsr6-vsr4" ipv6 address 2001:db8:293:f2f::14/127
-/configure router Base interface "vsr6-vsr4" no shutdown
+/configure router Base interface "vsr6-vsr3" address 10.1.1.28/31
+/configure router Base interface "vsr6-vsr3" port 1/1/c2/1:5
+/configure router Base interface "vsr6-vsr3" ipv6 address 2001:db8:293:f2f::1a/127
+/configure router Base interface "vsr6-vsr3" no shutdown
 /configure router Base autonomous-system 65505
 /configure router Base ecmp 2
 /configure router Base router-id 100.64.0.6
@@ -131,27 +184,27 @@
 /configure router Base isis 0 interface "vsr6-vsr1" level 1 metric 25000
 /configure router Base isis 0 interface "vsr6-vsr1" level 2 metric 25000
 /configure router Base isis 0 interface "vsr6-vsr1" no shutdown
-/configure router Base isis 0 interface "vsr6-vsr4" interface-type point-to-point
-/configure router Base isis 0 interface "vsr6-vsr4" level 1 metric 25000
-/configure router Base isis 0 interface "vsr6-vsr4" level 2 metric 25000
-/configure router Base isis 0 interface "vsr6-vsr4" no shutdown
+/configure router Base isis 0 interface "vsr6-vsr3" interface-type point-to-point
+/configure router Base isis 0 interface "vsr6-vsr3" level 1 metric 25000
+/configure router Base isis 0 interface "vsr6-vsr3" level 2 metric 25000
+/configure router Base isis 0 interface "vsr6-vsr3" no shutdown
 /configure router Base isis 0 segment-routing prefix-sid-range global
 /configure router Base isis 0 segment-routing no shutdown
 /configure router Base isis 0 no shutdown
 /configure router Base mpls interface "system" no shutdown
 /configure router Base mpls interface "vsr6-vsr1" no shutdown
-/configure router Base mpls interface "vsr6-vsr4" no shutdown
+/configure router Base mpls interface "vsr6-vsr3" no shutdown
 /configure router Base rsvp refresh-reduction-over-bypass enable
 /configure router Base rsvp interface "system" no shutdown
 /configure router Base rsvp interface "vsr6-vsr1" no shutdown
-/configure router Base rsvp interface "vsr6-vsr4" no shutdown
+/configure router Base rsvp interface "vsr6-vsr3" no shutdown
 /configure router Base rsvp no shutdown
 /configure router Base mpls path "loose" no shutdown
 /configure router Base mpls no shutdown
 /configure router Base ldp interface-parameters interface "vsr6-vsr1" dual-stack ipv4 no shutdown
 /configure router Base ldp interface-parameters interface "vsr6-vsr1" dual-stack no shutdown
-/configure router Base ldp interface-parameters interface "vsr6-vsr4" dual-stack ipv4 no shutdown
-/configure router Base ldp interface-parameters interface "vsr6-vsr4" dual-stack no shutdown
+/configure router Base ldp interface-parameters interface "vsr6-vsr3" dual-stack ipv4 no shutdown
+/configure router Base ldp interface-parameters interface "vsr6-vsr3" dual-stack no shutdown
 /configure router Base ldp targeted-session
 /configure router Base ldp no shutdown
 /configure service customer 1 create
@@ -163,8 +216,8 @@
 /configure service ies 1 customer 1 interface "vsr6-host6" create
 /configure service ies 1 customer 1 interface "vsr6-host6" address 10.6.6.1/30
 /configure service ies 1 customer 1 interface "vsr6-host6" ipv6 address 2001:db8:293:f6f::2/127
-/configure service ies 1 customer 1 interface "vsr6-host6" sap 1/1/5:0 create
-/configure service ies 1 customer 1 interface "vsr6-host6" sap 1/1/5:0
+/configure service ies 1 customer 1 interface "vsr6-host6" sap 1/1/c4/1:0 create
+/configure service ies 1 customer 1 interface "vsr6-host6" sap 1/1/c4/1:0
 /configure service ies 1 customer 1 no shutdown
 /configure router Base isis 0 segment-routing prefix-sid-range global
 /configure router Base isis 0 segment-routing no shutdown
@@ -203,13 +256,20 @@
 /configure router Base bgp ibgp-multipath
 /configure router Base bgp best-path-selection deterministic-med
 /configure router Base bgp next-hop-resolution shortcut-tunnel family ipv4 resolution-filter ldp
+/configure router Base bgp next-hop-resolution shortcut-tunnel family ipv4 resolution-filter sr-isis
 /configure router Base bgp next-hop-resolution shortcut-tunnel family ipv4 resolution filter
-/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv4 resolution-filter no ldp
-/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv4 resolution disabled
-/configure router Base bgp next-hop-resolution label-route-transport-tunnel family vpn resolution-filter no ldp
-/configure router Base bgp next-hop-resolution label-route-transport-tunnel family vpn resolution disabled
-/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv6 resolution-filter no ldp
-/configure router Base bgp next-hop-resolution label-route-transport-tunnel family ipv6 resolution disabled
+/configure router Base bgp next-hop-resolution shortcut-tunnel family ipv6 resolution-filter sr-isis
+/configure router Base bgp next-hop-resolution shortcut-tunnel family ipv6 resolution filter
+/configure router Base bgp next-hop-resolution labeled-routes transport-tunnel family vpn resolution-filter no ldp
+/configure router Base bgp next-hop-resolution labeled-routes transport-tunnel family vpn resolution-filter sr-isis
+/configure router Base bgp next-hop-resolution labeled-routes transport-tunnel family vpn resolution-filter bgp
+/configure router Base bgp next-hop-resolution labeled-routes transport-tunnel family vpn resolution disabled
+/configure router Base bgp next-hop-resolution labeled-routes transport-tunnel family label-ipv4 resolution-filter ldp
+/configure router Base bgp next-hop-resolution labeled-routes transport-tunnel family label-ipv4 resolution-filter sr-isis
+/configure router Base bgp next-hop-resolution labeled-routes transport-tunnel family label-ipv4 resolution filter
+/configure router Base bgp next-hop-resolution labeled-routes transport-tunnel family label-ipv6 resolution-filter ldp
+/configure router Base bgp next-hop-resolution labeled-routes transport-tunnel family label-ipv6 resolution-filter sr-isis
+/configure router Base bgp next-hop-resolution labeled-routes transport-tunnel family label-ipv6 resolution filter
 /configure router Base bgp group "ebgp" family ipv4 ipv6
 /configure router Base bgp group "ebgp" type external
 /configure router Base bgp group "ebgp" local-as 65505
