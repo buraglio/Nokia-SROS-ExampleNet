@@ -212,11 +212,13 @@
 /configure router Base mpls interface "vsr4-vsr1" no shutdown
 /configure router Base mpls interface "vsr4-vsr2" no shutdown
 /configure router Base mpls interface "vsr4-vsr3" no shutdown
+/configure router Base mpls interface "vsr4-vsr5" no shutdown
 /configure router Base rsvp refresh-reduction-over-bypass enable
 /configure router Base rsvp interface "system" no shutdown
 /configure router Base rsvp interface "vsr4-vsr1" no shutdown
 /configure router Base rsvp interface "vsr4-vsr2" no shutdown
 /configure router Base rsvp interface "vsr4-vsr3" no shutdown
+/configure router Base rsvp interface "vsr4-vsr5" no shutdown
 /configure router Base rsvp no shutdown
 /configure router Base mpls path "loose" no shutdown
 /configure router Base mpls no shutdown

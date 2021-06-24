@@ -1,3 +1,10 @@
+# TiMOS-C-20.10.R2 cpm/x86_64 Nokia 7750 SR Copyright (c) 2000-2020 Nokia.
+# All rights reserved. All use subject to applicable license agreements.
+# Built on Wed Dec 2 12:25:50 PST 2020 by builder in /builds/c/2010B/R2/panos/main/sros
+# Configuration format version 20.10 revision 0
+
+# Generated THU JUN 24 16:04:59 2021 UTC
+
 exit all
 configure
 #--------------------------------------------------
@@ -117,7 +124,10 @@ echo "Connector Configuration"
         shutdown
     exit
     port 1/1/c6
-        shutdown
+        connector
+            breakout c1-100g
+        exit
+        no shutdown
     exit
     port 1/1/c7
         shutdown
@@ -272,6 +282,21 @@ echo "Port Configuration"
         exit
         no shutdown
     exit
+    port 1/1/c6/1
+        ethernet
+            encap-type dot1q
+            lldp
+                dest-mac nearest-bridge
+                    admin-status tx-rx
+                    notification
+                    tx-tlvs port-desc sys-name sys-desc sys-cap
+                    tx-mgmt-address system system-ipv6
+                    port-id-subtype tx-if-name
+                exit
+            exit
+        exit
+        no shutdown
+    exit
     port A/3
         shutdown
         ethernet
@@ -306,6 +331,11 @@ echo "Router (Network Side) Configuration"
             ipv6
                 address 2001:db8:293:ffff::1/128
             exit
+            no shutdown
+        exit
+        interface "to_PCE"
+            address 192.74.210.124/26
+            port 1/1/c6/1:0
             no shutdown
         exit
         interface "vsr1-vsr2"
@@ -360,6 +390,8 @@ echo "ISIS Configuration"
         isis 0
             router-id 100.64.0.1
             area-id 49.0001
+            database-export identifier 100 bgp-ls-identifier 100
+            export "isis-direct-routes"
             traffic-engineering
             advertise-router-capability area
             ipv6-routing mt
@@ -420,6 +452,21 @@ echo "ISIS Configuration"
             no shutdown
         exit
 #--------------------------------------------------
+echo "Pcep Configuration"
+#--------------------------------------------------
+        pcep
+            pcc
+                local-address 100.64.0.1
+                peer 192.74.210.125
+                    no shutdown
+                exit
+                peer 192.74.210.126
+                    no shutdown
+                exit
+                no shutdown
+            exit
+        exit
+#--------------------------------------------------
 echo "MPLS Configuration"
 #--------------------------------------------------
         mpls
@@ -430,6 +477,9 @@ echo "MPLS Configuration"
                 no shutdown
             exit
             interface "vsr1-vsr3"
+                no shutdown
+            exit
+            interface "vsr1-vsr4"
                 no shutdown
             exit
             interface "vsr1-vsr6"
@@ -448,6 +498,9 @@ echo "RSVP Configuration"
                 no shutdown
             exit
             interface "vsr1-vsr3"
+                no shutdown
+            exit
+            interface "vsr1-vsr4"
                 no shutdown
             exit
             interface "vsr1-vsr6"
@@ -573,13 +626,27 @@ echo "Policy Configuration"
                     exit
                 exit
             exit
+            policy-statement "isis-direct-routes"
+                entry 10
+                    from
+                        protocol direct
+                    exit
+                    action accept
+                    exit
+                exit
+                default-action drop
+                exit
+            exit
             commit
         exit
 #--------------------------------------------------
 echo "BGP Configuration"
 #--------------------------------------------------
         bgp
+            family ipv4 bgp-ls
             ibgp-multipath
+            link-state-export-enable
+            link-state-import-enable
             best-path-selection
                 deterministic-med
             exit
@@ -624,6 +691,17 @@ echo "BGP Configuration"
                             resolution filter
                         exit
                     exit
+                exit
+            exit
+            group "pce"
+                family ipv4 bgp-ls
+                type internal
+                local-as 65505
+                peer-as 65505
+                local-address 192.74.210.124
+                neighbor 192.74.210.125
+                exit
+                neighbor 192.74.210.126
                 exit
             exit
             group "ibgp"

@@ -38,7 +38,8 @@
 /configure port 1/1/c4 connector breakout c1-100g
 /configure port 1/1/c4 no shutdown
 /configure port 1/1/c5 shutdown
-/configure port 1/1/c6 shutdown
+/configure port 1/1/c6 connector breakout c1-100g
+/configure port 1/1/c6 no shutdown
 /configure port 1/1/c7 shutdown
 /configure port 1/1/c8 shutdown
 /configure port 1/1/c9 shutdown
@@ -97,6 +98,13 @@
 /configure port 1/1/c4/1 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
 /configure port 1/1/c4/1 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
 /configure port 1/1/c4/1 no shutdown
+/configure port 1/1/c6/1 ethernet encap-type dot1q
+/configure port 1/1/c6/1 ethernet lldp dest-mac nearest-bridge admin-status tx-rx
+/configure port 1/1/c6/1 ethernet lldp dest-mac nearest-bridge notification
+/configure port 1/1/c6/1 ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
+/configure port 1/1/c6/1 ethernet lldp dest-mac nearest-bridge tx-mgmt-address system system-ipv6
+/configure port 1/1/c6/1 ethernet lldp dest-mac nearest-bridge port-id-subtype tx-if-name
+/configure port 1/1/c6/1 no shutdown
 /configure port A/3 shutdown
 /configure port A/3 ethernet
 /configure port B/3 shutdown
@@ -107,6 +115,9 @@
 /configure router Base interface "system" address 100.64.0.1/32
 /configure router Base interface "system" ipv6 address 2001:db8:293:ffff::1/128
 /configure router Base interface "system" no shutdown
+/configure router Base interface "to_PCE" address 192.74.210.124/26
+/configure router Base interface "to_PCE" port 1/1/c6/1:0
+/configure router Base interface "to_PCE" no shutdown
 /configure router Base interface "vsr1-vsr2" address 10.1.1.2/31
 /configure router Base interface "vsr1-vsr2" port 1/1/c1/1:5
 /configure router Base interface "vsr1-vsr2" ipv6 address 2001:db8:293:f2f::2/127
@@ -131,6 +142,8 @@
 /configure router Base mpls-labels sr-labels start 400000 end 500000
 /configure router Base isis 0 router-id 100.64.0.1
 /configure router Base isis 0 area-id 49.0001
+/configure router Base isis 0 database-export identifier 100 bgp-ls-identifier 100
+/configure router Base isis 0 export "isis-direct-routes"
 /configure router Base isis 0 traffic-engineering
 /configure router Base isis 0 advertise-router-capability area
 /configure router Base isis 0 ipv6-routing mt
@@ -157,14 +170,20 @@
 /configure router Base isis 0 interface "vsr1-vsr6" level 2 metric 25000
 /configure router Base isis 0 interface "vsr1-vsr6" no shutdown
 /configure router Base isis 0 no shutdown
+/configure router Base pcep pcc local-address 100.64.0.1
+/configure router Base pcep pcc peer 192.74.210.125 no shutdown
+/configure router Base pcep pcc peer 192.74.210.126 no shutdown
+/configure router Base pcep pcc no shutdown
 /configure router Base mpls interface "system" no shutdown
 /configure router Base mpls interface "vsr1-vsr2" no shutdown
 /configure router Base mpls interface "vsr1-vsr3" no shutdown
+/configure router Base mpls interface "vsr1-vsr4" no shutdown
 /configure router Base mpls interface "vsr1-vsr6" no shutdown
 /configure router Base rsvp refresh-reduction-over-bypass enable
 /configure router Base rsvp interface "system" no shutdown
 /configure router Base rsvp interface "vsr1-vsr2" no shutdown
 /configure router Base rsvp interface "vsr1-vsr3" no shutdown
+/configure router Base rsvp interface "vsr1-vsr4" no shutdown
 /configure router Base rsvp interface "vsr1-vsr6" no shutdown
 /configure router Base rsvp no shutdown
 /configure router Base mpls path "loose" no shutdown
@@ -205,8 +224,14 @@
 /configure router Base policy-options policy-statement "aggregate-routes" entry 10 action accept local-preference 10000
 /configure router Base policy-options policy-statement "connected-routes" entry 5 from protocol direct
 /configure router Base policy-options policy-statement "connected-routes" entry 5 action accept local-preference 10000
+/configure router Base policy-options policy-statement "isis-direct-routes" entry 10 from protocol direct
+/configure router Base policy-options policy-statement "isis-direct-routes" entry 10 action accept
+/configure router Base policy-options policy-statement "isis-direct-routes" default-action drop
 /configure router Base policy-options commit
+/configure router Base bgp family ipv4 bgp-ls
 /configure router Base bgp ibgp-multipath
+/configure router Base bgp link-state-export-enable
+/configure router Base bgp link-state-import-enable
 /configure router Base bgp best-path-selection deterministic-med
 /configure router Base bgp next-hop-resolution shortcut-tunnel family ipv4 resolution-filter ldp
 /configure router Base bgp next-hop-resolution shortcut-tunnel family ipv4 resolution-filter sr-isis
@@ -223,6 +248,13 @@
 /configure router Base bgp next-hop-resolution labeled-routes transport-tunnel family label-ipv6 resolution-filter ldp
 /configure router Base bgp next-hop-resolution labeled-routes transport-tunnel family label-ipv6 resolution-filter sr-isis
 /configure router Base bgp next-hop-resolution labeled-routes transport-tunnel family label-ipv6 resolution filter
+/configure router Base bgp group "pce" family ipv4 bgp-ls
+/configure router Base bgp group "pce" type internal
+/configure router Base bgp group "pce" local-as 65505
+/configure router Base bgp group "pce" peer-as 65505
+/configure router Base bgp group "pce" local-address 192.74.210.124
+/configure router Base bgp group "pce" neighbor 192.74.210.125
+/configure router Base bgp group "pce" neighbor 192.74.210.126
 /configure router Base bgp group "ibgp" family ipv4 ipv6 vpn-ipv4 mcast-ipv4 vpn-ipv6
 /configure router Base bgp group "ibgp" next-hop-self
 /configure router Base bgp group "ibgp" type internal

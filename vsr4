@@ -3,7 +3,7 @@
 # Built on Wed Dec 2 12:25:50 PST 2020 by builder in /builds/c/2010B/R2/panos/main/sros
 # Configuration format version 20.10 revision 0
 
-# Generated WED JUN 23 20:24:44 2021 UTC
+# Generated THU JUN 24 16:06:14 2021 UTC
 
 exit all
 configure
@@ -586,6 +586,9 @@ echo "MPLS Configuration"
             interface "vsr4-vsr3"
                 no shutdown
             exit
+            interface "vsr4-vsr5"
+                no shutdown
+            exit
         exit
 #--------------------------------------------------
 echo "RSVP Configuration"
@@ -602,6 +605,9 @@ echo "RSVP Configuration"
                 no shutdown
             exit
             interface "vsr4-vsr3"
+                no shutdown
+            exit
+            interface "vsr4-vsr5"
                 no shutdown
             exit
             no shutdown
@@ -815,4 +821,4 @@ echo "Log all events for service vprn Configuration"
 
 exit all
 
-# Finished WED JUN 23 20:24:48 2021 UTC
+# Finished THU JUN 24 16:06:16 2021 UTC
