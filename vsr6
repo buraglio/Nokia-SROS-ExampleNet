@@ -1,3 +1,10 @@
+# TiMOS-C-20.10.R2 cpm/x86_64 Nokia 7750 SR Copyright (c) 2000-2020 Nokia.
+# All rights reserved. All use subject to applicable license agreements.
+# Built on Wed Dec 2 12:25:50 PST 2020 by builder in /builds/c/2010B/R2/panos/main/sros
+# Configuration format version 20.10 revision 0
+
+# Generated THU JUN 24 14:57:44 2021 UTC
+
 exit all
 configure
 #--------------------------------------------------
@@ -30,6 +37,9 @@ echo "System Configuration"
         exit
         rollback
             rollback-location "cf3:/ansible"
+        exit
+        snmp
+            shutdown
         exit
         time
             sntp
@@ -437,17 +447,21 @@ echo "Router (Network Side) Configuration"
             exit
             no shutdown
         exit
+        interface "to_PCE"
+            address 192.74.210.126/26
+            port 1/1/c3/1:0
+            no shutdown
+        exit
         interface "vsr6-vsr1"
             address 10.2.1.22/31
             port 1/1/c1/1:5
             ipv6
-
                 address 2001:db8:293:f3f::16/127
             exit
             no shutdown
         exit
         interface "vsr6-vsr3"
-            address 10.1.1.28/31
+            address 10.1.1.26/31
             port 1/1/c2/1:5
             ipv6
                 address 2001:db8:293:f2f::1a/127
@@ -466,6 +480,11 @@ echo "Static Route Configuration"
                 shutdown
             exit
         exit
+        static-route-entry 192.74.211.0/24
+            next-hop 192.74.210.65
+                no shutdown
+            exit
+        exit
         static-route-entry ::/0
             black-hole
                 shutdown
@@ -476,7 +495,7 @@ echo "Aggregate Configuration"
 #--------------------------------------------------
         aggregate 100.126.0.0/16
 #--------------------------------------------------
-echo "MPLS LABEL RANGE Configuration"
+echo "MPLS Label Range Configuration"
 #--------------------------------------------------
         mpls-labels
             sr-labels start 400000 end 500000
@@ -498,6 +517,10 @@ echo "ISIS Configuration"
             exit
             level 2
                 wide-metrics-only
+            exit
+            segment-routing
+                prefix-sid-range global
+                no shutdown
             exit
             interface "system"
                 ipv4-node-sid index 26000
@@ -523,11 +546,22 @@ echo "ISIS Configuration"
                 exit
                 no shutdown
             exit
-            segment-routing
-                prefix-sid-range global
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "Pcep Configuration"
+#--------------------------------------------------
+        pcep
+            pcc
+                local-address 100.64.0.6
+                peer 192.74.210.125
+                    no shutdown
+                exit
+                peer 192.74.210.126
+                    no shutdown
+                exit
                 no shutdown
             exit
-            no shutdown
         exit
 #--------------------------------------------------
 echo "MPLS Configuration"
@@ -572,6 +606,8 @@ echo "MPLS LSP Configuration"
 echo "LDP Configuration"
 #--------------------------------------------------
         ldp
+            import-pmsi-routes
+            exit
             interface-parameters
                 interface "vsr6-vsr1" dual-stack
                     ipv4
@@ -596,23 +632,21 @@ echo "LDP Configuration"
 echo "Service Configuration"
 #--------------------------------------------------
     service
-        customer 1 create
+        customer 1 name "1" create
             description "Default customer"
         exit
-        ies 1 customer 1 create
+        ies 1 name "1" customer 1 create
             interface "vsr6-host6" create
             exit
         exit
-        ies 1 customer 1 create
+        ies 1 name "1" customer 1 create
+            shutdown
             interface "vsr6-host6" create
                 address 10.6.6.1/30
                 ipv6
                     address 2001:db8:293:f6f::2/127
                 exit
-                sap 1/1/c4/1:0 create
-                exit
             exit
-            no shutdown
         exit
     exit
 #--------------------------------------------------
@@ -623,167 +657,12 @@ echo "Router (Service Side) Configuration"
 echo "ISIS Configuration"
 #--------------------------------------------------
         isis 0
-            segment-routing
-                prefix-sid-range global
-                no shutdown
-            exit
             no shutdown
-        exit
-#--------------------------------------------------
-echo "Policy Configuration"
-#--------------------------------------------------
-        policy-options
-            begin
-            prefix-list "default-only"
-                prefix 0.0.0.0/0 exact
-            exit
-            prefix-list "default6-only"
-                prefix ::/0 exact
-            exit
-            prefix-list "vsr6-exact-v4"
-                prefix 100.126.0.0/16 exact
-            exit
-            prefix-list "customer6-routes"
-                prefix 10.66.0.0/16 exact
-            exit
-            prefix-list "customer6-routes6"
-                prefix 2001:db8:6::/48 exact
-            exit
-            policy-statement "from-customer6"
-                entry 10
-                    from
-                        prefix-list "customer6-routes"
-                        family ipv4
-                    exit
-                    action accept
-                    exit
-                exit
-                default-action next-policy
-                exit
-            exit
-            policy-statement "aggregate-routes"
-                entry 10
-                    description "vsr6-aggregate"
-                    from
-                        protocol aggregate
-                        prefix-list "vsr6-exact-v4"
-                    exit
-                    action accept
-                        local-preference 10000
-                    exit
-                exit
-            exit
-            policy-statement "connected-routes"
-                entry 5
-                    from
-                        protocol direct
-                    exit
-                    action accept
-                        local-preference 10000
-                    exit
-                exit
-            exit
-            policy-statement "default-originate"
-                entry 10
-                    from
-                        protocol static
-                        prefix-list "default-only"
-                        family ipv4
-                    exit
-                    action accept
-                    exit
-                exit
-                default-action next-policy
-                exit
-            exit
-            policy-statement "from-customer6-v6"
-                entry 10
-                    from
-                        prefix-list "customer6-routes6"
-                        family ipv6
-                    exit
-                    action accept
-                    exit
-                exit
-                default-action next-policy
-                exit
-            exit
-            policy-statement "default6-originate"
-                entry 10
-                    from
-                        protocol static
-                        prefix-list "default6-only"
-                        family ipv6
-                    exit
-                    action accept
-                    exit
-                exit
-                default-action next-policy
-                exit
-            exit
-            commit
         exit
 #--------------------------------------------------
 echo "BGP Configuration"
 #--------------------------------------------------
-bgp
-    ibgp-multipath
-    best-path-selection
-        deterministic-med
-    exit
-    next-hop-resolution
-        shortcut-tunnel
-            family ipv4
-                resolution-filter
-                    ldp
-                    sr-isis
-                exit
-                resolution filter
-            exit
-            family ipv6
-                resolution-filter
-                    sr-isis
-                exit
-                resolution filter
-            exit
-        exit
-        labeled-routes
-            transport-tunnel
-                family vpn
-                    resolution-filter
-                        no ldp
-                        sr-isis
-                        bgp
-                    exit
-                    resolution disabled
-                exit
-                family label-ipv4
-                    resolution-filter
-                        ldp
-                        sr-isis
-                    exit
-                    resolution filter
-                exit
-                family label-ipv6
-                    resolution-filter
-                        ldp
-                        sr-isis
-                    exit
-                    resolution filter
-                exit
-            exit
-        exit
-    exit
-            group "ebgp"
-                family ipv4 ipv6
-                type external
-                local-as 65505
-                peer-as 65560
-                neighbor 10.6.6.2
-                    import "from-customer6"
-                    export "default-originate"
-                exit
-            exit
+        bgp
             group "ibgp"
                 family ipv4 ipv6 vpn-ipv4 mcast-ipv4 vpn-ipv6
                 next-hop-self
@@ -791,7 +670,7 @@ bgp
                 export "aggregate-routes" "connected-routes"
                 local-as 65505
                 peer-as 65505
-                local-address 100.64.0.6
+                local-address 100.64.0.4
                 neighbor 100.64.0.1
                 exit
                 neighbor 100.64.0.2
@@ -802,12 +681,17 @@ bgp
                 exit
                 neighbor 100.64.0.5
                 exit
-                neighbor 100.64.0.7
-                exit
             exit
             no shutdown
         exit
     exit
 
+#--------------------------------------------------
+echo "Log all events for service vprn Configuration"
+#--------------------------------------------------
+    log
+    exit
 
 exit all
+
+# Finished THU JUN 24 14:57:46 2021 UTC

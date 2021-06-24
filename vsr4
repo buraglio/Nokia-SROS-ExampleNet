@@ -1,416 +1,423 @@
+# TiMOS-C-20.10.R2 cpm/x86_64 Nokia 7750 SR Copyright (c) 2000-2020 Nokia.
+# All rights reserved. All use subject to applicable license agreements.
+# Built on Wed Dec 2 12:25:50 PST 2020 by builder in /builds/c/2010B/R2/panos/main/sros
+# Configuration format version 20.10 revision 0
+
+# Generated WED JUN 23 20:24:44 2021 UTC
+
 exit all
 configure
 #--------------------------------------------------
 echo "System Configuration"
 #--------------------------------------------------
-system
-    name "vsr4"
-    power-management
-        mode none
-    exit
-    power-shelf 1
-        power-shelf-type ps-a4-shelf-dc
-        power-module 1
-            power-module-type ps-a-dc-6000
+    system
+        name "vsr4"
+        power-management
+            mode none
+        exit
+        power-shelf 1
+            power-shelf-type ps-a4-shelf-dc
+            power-module 1
+                power-module-type ps-a-dc-6000
+                no shutdown
+            exit
+            power-module 2
+                power-module-type ps-a-dc-6000
+                no shutdown
+            exit
+            power-module 3
+                power-module-type ps-a-dc-6000
+                no shutdown
+            exit
+            power-module 4
+                power-module-type ps-a-dc-6000
+                no shutdown
+            exit
             no shutdown
         exit
-        power-module 2
-            power-module-type ps-a-dc-6000
-            no shutdown
+        rollback
+            rollback-location "cf3:/ansible"
         exit
-        power-module 3
-            power-module-type ps-a-dc-6000
-            no shutdown
+        time
+            sntp
+                shutdown
+            exit
+            zone UTC
         exit
-        power-module 4
-            power-module-type ps-a-dc-6000
-            no shutdown
+        bluetooth
+            module A
+            exit
+            module B
+            exit
+            power off
         exit
-        no shutdown
     exit
-    rollback
-        rollback-location "cf3:/ansible"
-    exit
-    time
-        sntp
-            shutdown
-        exit
-        zone UTC
-    exit
-    bluetooth
-        module A
-        exit
-        module B
-        exit
-        power off
-    exit
-exit
 #--------------------------------------------------
 echo "System Security Configuration"
 #--------------------------------------------------
-system
-    security
-        management-access-filter
-            ip-filter
-                shutdown
-                default-action permit
-                entry 100
-                    src-ip 192.168.2.0/24
-                    protocol tcp
-                    dst-port 22 65535
-                    action permit
+    system
+        security
+            management-access-filter
+                ip-filter
+                    shutdown
+                    default-action permit
+                    entry 100
+                        src-ip 192.168.2.0/24
+                        protocol tcp
+                        dst-port 22 65535
+                        action permit
+                    exit
+                    no shutdown
                 exit
-                no shutdown
             exit
-        exit
-        per-peer-queuing
-        dist-cpu-protection
-            policy "_default-access-policy" create
-            exit
-            policy "_default-network-policy" create
+            per-peer-queuing
+            dist-cpu-protection
+                policy "_default-access-policy" create
+                exit
+                policy "_default-network-policy" create
+                exit
             exit
         exit
     exit
-exit
 #--------------------------------------------------
 echo "Log Configuration"
 #--------------------------------------------------
-log
-exit
+    log
+    exit
 #--------------------------------------------------
 echo "Switch Fabric Configuration"
 #--------------------------------------------------
-sfm 1
-    sfm-type sfm-2s
-    no shutdown
-exit
-sfm 2
-    sfm-type sfm-2s
-    no shutdown
-exit
+    sfm 1
+        sfm-type sfm-2s
+        no shutdown
+    exit
+    sfm 2
+        sfm-type sfm-2s
+        no shutdown
+    exit
 #--------------------------------------------------
 echo "Card Configuration"
 #--------------------------------------------------
-card 1
-    card-type xcm-2s
-    mda 1
-        mda-type s36-400gb-qsfpdd
+    card 1
+        card-type xcm-2s
+        mda 1
+            mda-type s36-400gb-qsfpdd
+            no shutdown
+        exit
         no shutdown
     exit
-    no shutdown
-exit
-card 2
-    card-type xcm-2s
-    mda 1
-        mda-type s36-400gb-qsfpdd
+    card 2
+        card-type xcm-2s
+        mda 1
+            mda-type s36-400gb-qsfpdd
+            no shutdown
+        exit
         no shutdown
     exit
-    no shutdown
-exit
 #--------------------------------------------------
 echo "Connector Configuration"
 #--------------------------------------------------
-port 1/1/c1
-    connector
-        breakout c1-100g
+    port 1/1/c1
+        connector
+            breakout c1-100g
+        exit
+        no shutdown
     exit
-    no shutdown
-exit
-port 1/1/c2
-    connector
-        breakout c1-100g
+    port 1/1/c2
+        connector
+            breakout c1-100g
+        exit
+        no shutdown
     exit
-    no shutdown
-exit
-port 1/1/c3
-    connector
-        breakout c1-100g
+    port 1/1/c3
+        connector
+            breakout c1-100g
+        exit
+        no shutdown
     exit
-    no shutdown
-exit
-port 1/1/c4
-    connector
-        breakout c1-100g
+    port 1/1/c4
+        connector
+            breakout c1-100g
+        exit
+        no shutdown
     exit
-    no shutdown
-exit
-port 1/1/c5
-    shutdown
-exit
-port 1/1/c6
-    shutdown
-exit
-port 1/1/c7
-    shutdown
-exit
-port 1/1/c8
-    shutdown
-exit
-port 1/1/c9
-    shutdown
-exit
-port 1/1/c10
-    shutdown
-exit
-port 1/1/c11
-    shutdown
-exit
-port 1/1/c12
-    shutdown
-exit
-port 1/1/c13
-    shutdown
-exit
-port 1/1/c14
-    shutdown
-exit
-port 1/1/c15
-    shutdown
-exit
-port 1/1/c16
-    shutdown
-exit
-port 1/1/c17
-    shutdown
-exit
-port 1/1/c18
-    shutdown
-exit
-port 1/1/c19
-    shutdown
-exit
-port 1/1/c20
-    shutdown
-exit
-port 1/1/c21
-    shutdown
-exit
-port 1/1/c22
-    shutdown
-exit
-port 1/1/c23
-    shutdown
-exit
-port 1/1/c24
-    shutdown
-exit
-port 1/1/c25
-    shutdown
-exit
-port 1/1/c26
-    shutdown
-exit
-port 1/1/c27
-    shutdown
-exit
-port 1/1/c28
-    shutdown
-exit
-port 1/1/c29
-    shutdown
-exit
-port 1/1/c30
-    shutdown
-exit
-port 1/1/c31
-    shutdown
-exit
-port 1/1/c32
-    shutdown
-exit
-port 1/1/c33
-    shutdown
-exit
-port 1/1/c34
-    shutdown
-exit
-port 1/1/c35
-    shutdown
-exit
-port 1/1/c36
-    shutdown
-exit
-port 2/1/c1
-    shutdown
-exit
-port 2/1/c2
-    shutdown
-exit
-port 2/1/c3
-    shutdown
-exit
-port 2/1/c4
-    shutdown
-exit
-port 2/1/c5
-    shutdown
-exit
-port 2/1/c6
-    shutdown
-exit
-port 2/1/c7
-    shutdown
-exit
-port 2/1/c8
-    shutdown
-exit
-port 2/1/c9
-    shutdown
-exit
-port 2/1/c10
-    shutdown
-exit
-port 2/1/c11
-    shutdown
-exit
-port 2/1/c12
-    shutdown
-exit
-port 2/1/c13
-    shutdown
-exit
-port 2/1/c14
-    shutdown
-exit
-port 2/1/c15
-    shutdown
-exit
-port 2/1/c16
-    shutdown
-exit
-port 2/1/c17
-    shutdown
-exit
-port 2/1/c18
-    shutdown
-exit
-port 2/1/c19
-    shutdown
-exit
-port 2/1/c20
-    shutdown
-exit
-port 2/1/c21
-    shutdown
-exit
-port 2/1/c22
-    shutdown
-exit
-port 2/1/c23
-    shutdown
-exit
-port 2/1/c24
-    shutdown
-exit
-port 2/1/c25
-    shutdown
-exit
-port 2/1/c26
-    shutdown
-exit
-port 2/1/c27
-    shutdown
-exit
-port 2/1/c28
-    shutdown
-exit
-port 2/1/c29
-    shutdown
-exit
-port 2/1/c30
-    shutdown
-exit
-port 2/1/c31
-    shutdown
-exit
-port 2/1/c32
-    shutdown
-exit
-port 2/1/c33
-    shutdown
-exit
-port 2/1/c34
-    shutdown
-exit
-port 2/1/c35
-    shutdown
-exit
-port 2/1/c36
-    shutdown
-exit
+    port 1/1/c5
+        shutdown
+    exit
+    port 1/1/c6
+        shutdown
+    exit
+    port 1/1/c7
+        shutdown
+    exit
+    port 1/1/c8
+        shutdown
+    exit
+    port 1/1/c9
+        shutdown
+    exit
+    port 1/1/c10
+        shutdown
+    exit
+    port 1/1/c11
+        shutdown
+    exit
+    port 1/1/c12
+        shutdown
+    exit
+    port 1/1/c13
+        shutdown
+    exit
+    port 1/1/c14
+        shutdown
+    exit
+    port 1/1/c15
+        shutdown
+    exit
+    port 1/1/c16
+        shutdown
+    exit
+    port 1/1/c17
+        shutdown
+    exit
+    port 1/1/c18
+        shutdown
+    exit
+    port 1/1/c19
+        shutdown
+    exit
+    port 1/1/c20
+        shutdown
+    exit
+    port 1/1/c21
+        shutdown
+    exit
+    port 1/1/c22
+        shutdown
+    exit
+    port 1/1/c23
+        shutdown
+    exit
+    port 1/1/c24
+        shutdown
+    exit
+    port 1/1/c25
+        shutdown
+    exit
+    port 1/1/c26
+        shutdown
+    exit
+    port 1/1/c27
+        shutdown
+    exit
+    port 1/1/c28
+        shutdown
+    exit
+    port 1/1/c29
+        shutdown
+    exit
+    port 1/1/c30
+        shutdown
+    exit
+    port 1/1/c31
+        shutdown
+    exit
+    port 1/1/c32
+        shutdown
+    exit
+    port 1/1/c33
+        shutdown
+    exit
+    port 1/1/c34
+        shutdown
+    exit
+    port 1/1/c35
+        shutdown
+    exit
+    port 1/1/c36
+        shutdown
+    exit
+    port 2/1/c1
+        shutdown
+    exit
+    port 2/1/c2
+        shutdown
+    exit
+    port 2/1/c3
+        shutdown
+    exit
+    port 2/1/c4
+        shutdown
+    exit
+    port 2/1/c5
+        shutdown
+    exit
+    port 2/1/c6
+        shutdown
+    exit
+    port 2/1/c7
+        shutdown
+    exit
+    port 2/1/c8
+        shutdown
+    exit
+    port 2/1/c9
+        shutdown
+    exit
+    port 2/1/c10
+        shutdown
+    exit
+    port 2/1/c11
+        shutdown
+    exit
+    port 2/1/c12
+        shutdown
+    exit
+    port 2/1/c13
+        shutdown
+    exit
+    port 2/1/c14
+        shutdown
+    exit
+    port 2/1/c15
+        shutdown
+    exit
+    port 2/1/c16
+        shutdown
+    exit
+    port 2/1/c17
+        shutdown
+    exit
+    port 2/1/c18
+        shutdown
+    exit
+    port 2/1/c19
+        shutdown
+    exit
+    port 2/1/c20
+        shutdown
+    exit
+    port 2/1/c21
+        shutdown
+    exit
+    port 2/1/c22
+        shutdown
+    exit
+    port 2/1/c23
+        shutdown
+    exit
+    port 2/1/c24
+        shutdown
+    exit
+    port 2/1/c25
+        shutdown
+    exit
+    port 2/1/c26
+        shutdown
+    exit
+    port 2/1/c27
+        shutdown
+    exit
+    port 2/1/c28
+        shutdown
+    exit
+    port 2/1/c29
+        shutdown
+    exit
+    port 2/1/c30
+        shutdown
+    exit
+    port 2/1/c31
+        shutdown
+    exit
+    port 2/1/c32
+        shutdown
+    exit
+    port 2/1/c33
+        shutdown
+    exit
+    port 2/1/c34
+        shutdown
+    exit
+    port 2/1/c35
+        shutdown
+    exit
+    port 2/1/c36
+        shutdown
+    exit
 #--------------------------------------------------
 echo "Port Configuration"
 #--------------------------------------------------
-port 1/1/c1/1
-    ethernet
-        encap-type dot1q
-        lldp
-            dest-mac nearest-bridge
-                admin-status tx-rx
-                notification
-                tx-tlvs port-desc sys-name sys-desc sys-cap
-                tx-mgmt-address system system-ipv6
-                port-id-subtype tx-if-name
+    port 1/1/c1/1
+        ethernet
+            encap-type dot1q
+            lldp
+                dest-mac nearest-bridge
+                    admin-status tx-rx
+                    notification
+                    tx-tlvs port-desc sys-name sys-desc sys-cap
+                    tx-mgmt-address system system-ipv6
+                    port-id-subtype tx-if-name
+                exit
             exit
         exit
+        no shutdown
     exit
-    no shutdown
-exit
-port 1/1/c2/1
-    ethernet
-        encap-type dot1q
-        lldp
-            dest-mac nearest-bridge
-                admin-status tx-rx
-                notification
-                tx-tlvs port-desc sys-name sys-desc sys-cap
-                tx-mgmt-address system system-ipv6
-                port-id-subtype tx-if-name
+    port 1/1/c2/1
+        ethernet
+            encap-type dot1q
+            lldp
+                dest-mac nearest-bridge
+                    admin-status tx-rx
+                    notification
+                    tx-tlvs port-desc sys-name sys-desc sys-cap
+                    tx-mgmt-address system system-ipv6
+                    port-id-subtype tx-if-name
+                exit
             exit
         exit
+        no shutdown
     exit
-    no shutdown
-exit
-port 1/1/c3/1
-    ethernet
-        encap-type dot1q
-        lldp
-            dest-mac nearest-bridge
-                admin-status tx-rx
-                notification
-                tx-tlvs port-desc sys-name sys-desc sys-cap
-                tx-mgmt-address system system-ipv6
-                port-id-subtype tx-if-name
+    port 1/1/c3/1
+        ethernet
+            encap-type dot1q
+            lldp
+                dest-mac nearest-bridge
+                    admin-status tx-rx
+                    notification
+                    tx-tlvs port-desc sys-name sys-desc sys-cap
+                    tx-mgmt-address system system-ipv6
+                    port-id-subtype tx-if-name
+                exit
             exit
         exit
+        no shutdown
     exit
-    no shutdown
-exit
-port 1/1/c4/1
-    ethernet
-        encap-type dot1q
-        lldp
-            dest-mac nearest-bridge
-                admin-status tx-rx
-                notification
-                tx-tlvs port-desc sys-name sys-desc sys-cap
-                tx-mgmt-address system system-ipv6
-                port-id-subtype tx-if-name
+    port 1/1/c4/1
+        ethernet
+            encap-type dot1q
+            lldp
+                dest-mac nearest-bridge
+                    admin-status tx-rx
+                    notification
+                    tx-tlvs port-desc sys-name sys-desc sys-cap
+                    tx-mgmt-address system system-ipv6
+                    port-id-subtype tx-if-name
+                exit
             exit
         exit
+        no shutdown
     exit
-    no shutdown
-exit
-port A/3
-    shutdown
-    ethernet
+    port A/3
+        shutdown
+        ethernet
+        exit
     exit
-exit
-port B/3
-    shutdown
-    ethernet
+    port B/3
+        shutdown
+        ethernet
+        exit
     exit
-exit
 #--------------------------------------------------
 echo "System Sync-If-Timing Configuration"
 #--------------------------------------------------
@@ -478,7 +485,7 @@ echo "Aggregate Configuration"
 #--------------------------------------------------
         aggregate 100.124.0.0/16 black-hole
 #--------------------------------------------------
-echo "MPLS LABEL RANGE Configuration"
+echo "MPLS Label Range Configuration"
 #--------------------------------------------------
         mpls-labels
             sr-labels start 400000 end 500000
@@ -500,6 +507,10 @@ echo "ISIS Configuration"
             exit
             level 2
                 wide-metrics-only
+            exit
+            segment-routing
+                prefix-sid-range global
+                no shutdown
             exit
             interface "system"
                 ipv4-node-sid index 24000
@@ -542,11 +553,22 @@ echo "ISIS Configuration"
                 exit
                 no shutdown
             exit
-            segment-routing
-                prefix-sid-range global
+            no shutdown
+        exit
+#--------------------------------------------------
+echo "Pcep Configuration"
+#--------------------------------------------------
+        pcep
+            pcc
+                local-address 100.64.0.4
+                peer 192.74.210.125
+                    no shutdown
+                exit
+                peer 192.74.210.126
+                    no shutdown
+                exit
                 no shutdown
             exit
-            no shutdown
         exit
 #--------------------------------------------------
 echo "MPLS Configuration"
@@ -597,6 +619,8 @@ echo "MPLS LSP Configuration"
 echo "LDP Configuration"
 #--------------------------------------------------
         ldp
+            import-pmsi-routes
+            exit
             interface-parameters
                 interface "vsr4-vsr1" dual-stack
                     ipv4
@@ -633,14 +657,14 @@ echo "LDP Configuration"
 echo "Service Configuration"
 #--------------------------------------------------
     service
-        customer 1 create
+        customer 1 name "1" create
             description "Default customer"
         exit
-        vprn 111 customer 1 create
+        vprn 111 name "111" customer 1 create
             interface "to_vprn1_cust4" create
             exit
         exit
-        vprn 111 customer 1 create
+        vprn 111 name "111" customer 1 create
             shutdown
             autonomous-system 65111
             route-distinguisher 65111:10
@@ -673,10 +697,6 @@ echo "Router (Service Side) Configuration"
 echo "ISIS Configuration"
 #--------------------------------------------------
         isis 0
-            segment-routing
-                prefix-sid-range global
-                no shutdown
-            exit
             no shutdown
         exit
 #--------------------------------------------------
@@ -714,54 +734,54 @@ echo "Policy Configuration"
 #--------------------------------------------------
 echo "BGP Configuration"
 #--------------------------------------------------
-bgp
-    ibgp-multipath
-    best-path-selection
-        deterministic-med
-    exit
-    next-hop-resolution
-        shortcut-tunnel
-            family ipv4
-                resolution-filter
-                    ldp
-                    sr-isis
-                exit
-                resolution filter
+        bgp
+            ibgp-multipath
+            best-path-selection
+                deterministic-med
             exit
-            family ipv6
-                resolution-filter
-                    sr-isis
+            next-hop-resolution
+                shortcut-tunnel
+                    family ipv4
+                        resolution-filter
+                            ldp
+                            sr-isis
+                        exit
+                        resolution filter
+                    exit
+                    family ipv6
+                        resolution-filter
+                            sr-isis
+                        exit
+                        resolution filter
+                    exit
                 exit
-                resolution filter
+                labeled-routes
+                    transport-tunnel
+                        family vpn
+                            resolution-filter
+                                no ldp
+                                sr-isis
+                                bgp
+                            exit
+                            resolution disabled
+                        exit
+                        family label-ipv4
+                            resolution-filter
+                                ldp
+                                sr-isis
+                            exit
+                            resolution filter
+                        exit
+                        family label-ipv6
+                            resolution-filter
+                                ldp
+                                sr-isis
+                            exit
+                            resolution filter
+                        exit
+                    exit
+                exit
             exit
-        exit
-        labeled-routes
-            transport-tunnel
-                family vpn
-                    resolution-filter
-                        no ldp
-                        sr-isis
-                        bgp
-                    exit
-                    resolution disabled
-                exit
-                family label-ipv4
-                    resolution-filter
-                        ldp
-                        sr-isis
-                    exit
-                    resolution filter
-                exit
-                family label-ipv6
-                    resolution-filter
-                        ldp
-                        sr-isis
-                    exit
-                    resolution filter
-                exit
-            exit
-        exit
-    exit
             group "ibgp"
                 family ipv4 ipv6 vpn-ipv4 mcast-ipv4 vpn-ipv6
                 next-hop-self
@@ -787,5 +807,12 @@ bgp
         exit
     exit
 
+#--------------------------------------------------
+echo "Log all events for service vprn Configuration"
+#--------------------------------------------------
+    log
+    exit
 
 exit all
+
+# Finished WED JUN 23 20:24:48 2021 UTC
